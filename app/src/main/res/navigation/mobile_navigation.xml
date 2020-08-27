@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.delombaertdamien.go4lunch.ui.MapView.MapViewFragment"
+        android:label="@string/title_Map_View"
+        tools:layout="@layout/fragment_map_view" />
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.delombaertdamien.go4lunch.ui.ListView.ListViewFragment"
+        android:label="@string/title_List_View"
+        tools:layout="@layout/fragment_list_view" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.delombaertdamien.go4lunch.ui.Workmates.WorkmatesFragment"
+        android:label="@string/title_Workmates"
+        tools:layout="@layout/fragment_workmates" />
+</navigation>
