@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_map_view">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_map_view"
         android:name="com.delombaertdamien.go4lunch.ui.MapView.MapViewFragment"
         android:label="@string/title_Map_View"
         tools:layout="@layout/fragment_map_view" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_list_view"
         android:name="com.delombaertdamien.go4lunch.ui.ListView.ListViewFragment"
         android:label="@string/title_List_View"
         tools:layout="@layout/fragment_list_view" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_workmates"
         android:name="com.delombaertdamien.go4lunch.ui.Workmates.WorkmatesFragment"
         android:label="@string/title_Workmates"
         tools:layout="@layout/fragment_workmates" />
