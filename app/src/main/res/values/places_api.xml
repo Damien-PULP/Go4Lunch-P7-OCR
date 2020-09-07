@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PLACE API -->
+    <string name="apiKeyGooglePlace" translatable="false">AIzaSyDuBNP7kIKjI_F-G5F4sa_rdYi1ybR3mho</string>
+</resources>

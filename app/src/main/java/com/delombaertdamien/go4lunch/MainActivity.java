@@ -4,16 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.delombaertdamien.go4lunch.injections.Injection;
+import com.delombaertdamien.go4lunch.injections.ViewModelFactory;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,14 +36,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
+    //NAV HEADER
+    private ImageView iconProfileUser;
+    private TextView emailProfileUser;
+    private TextView nameProfileUser;
+
+    //VIEW MODEL
+    private MainViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        configureViewModel();
         configureBottomNavigationBar();
         configureUI();
         configureNavigationView();
+        updateUIWhenCreating();
+    }
+
+    private void configureViewModel() {
+        ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory(this);
+        this.viewModel = new ViewModelProvider(this,mViewModelFactory).get(MainViewModel.class);
     }
 
     private void configureBottomNavigationBar (){
@@ -46,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupWithNavController(navView, navController);
     }
     private void configureUI() {
+
         // --- Toolbar --- //
         this.toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
@@ -57,8 +84,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     private void configureNavigationView (){
         this.navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        ConstraintLayout header = (ConstraintLayout) navigationView.getHeaderView(0);
+        this.iconProfileUser = (ImageView) header.findViewById(R.id.nav_icon_user);
+        this.nameProfileUser = (TextView) header.findViewById(R.id.nav_name_user);
+        this.emailProfileUser = (TextView) header.findViewById(R.id.nav_email_user);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    private void updateUIWhenCreating(){
+
+        if(viewModel.getCurrentUser() != null){
+
+            if(viewModel.getCurrentUser().getPhotoUrl() != null){
+                Glide.with(this)
+                        .load(viewModel.getCurrentUser().getPhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(iconProfileUser);
+            }
+
+            nameProfileUser.setText(viewModel.getCurrentUser().getDisplayName());
+            emailProfileUser.setText(viewModel.getCurrentUser().getEmail());
+
+        }
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -69,10 +118,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // detail restaurant chose
                 break;
             case R.id.activity_main_drawer_settings:
-                // witch settings
+                // switch settings
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.activity_main_drawer_logout :
                 // logout user
+                this.viewModel.signOutUserFromFirebase(this);
                 break;
             default:
                 break;
@@ -80,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return false;
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_menu, menu);

@@ -6,4 +6,6 @@
     <color name="colorPrimaryVariant">#FF7D54</color>
     <color name="colorPrimaryDark">#676767</color>
     <color name="colorAccent">#2196F3</color>
+    <color name="colorFacebook">#2196F3</color>
+    <color name="ic_launcher_logo_background">#FF5722</color>
 </resources>

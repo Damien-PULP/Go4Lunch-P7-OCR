@@ -9,14 +9,10 @@
     tools:context=".LogActivity">
 
     <ImageView
+        android:src="@drawable/background_"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background_"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:scaleType="centerCrop"/>
 
     <ImageView
         android:id="@+id/logo_app"
@@ -62,7 +58,7 @@
         app:iconTint="#FFFFFF"
         app:icon="@drawable/ic_facebook_logo"
         android:text="@string/sign_with_fb_log_activity"
-        app:backgroundTint="@color/colorFacebook"
+        android:backgroundTint="#2196F3"
         android:textColor="#FFFFFF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,8 +79,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/sign_with_google_log_activity"
-        android:textColor="@color/colorBlank"
-        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#FF5722"
         android:padding="16dp"
         android:layout_marginHorizontal="24dp"
         app:layout_constraintEnd_toEndOf="parent"
