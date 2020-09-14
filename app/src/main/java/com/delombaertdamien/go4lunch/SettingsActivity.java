@@ -2,6 +2,7 @@ package com.delombaertdamien.go4lunch;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.DialogInterface;
@@ -25,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button deleteAccountButton;
 
     private MainViewModel viewModel;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         configureViewModel();
         configureUI();
+        configureToolbar();
         updateUIWhenCreating();
     }
 
@@ -43,6 +46,13 @@ public class SettingsActivity extends AppCompatActivity {
         emailUser = findViewById(R.id.settings_activity_email_user_account);
         deleteAccountButton = findViewById(R.id.settings_activity_delete_account);
 
+    }
+
+    private void configureToolbar() {
+        // --- Toolbar --- //
+        this.toolbar = (Toolbar) findViewById(R.id.activity_settings_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.nav_menu_settings);
     }
 
     private void configureViewModel() {

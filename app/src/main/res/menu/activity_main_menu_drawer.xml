@@ -6,21 +6,21 @@
         <item
             android:id="@+id/activity_main_drawer_your_lunch"
             android:icon="@drawable/ic_baseline_restaurant_menu_24"
-            android:title="YOUR LUNCH" />
+            android:title="@string/nav_menu_your_lunch" />
     </group>
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/activity_main_drawer_settings"
             android:icon="@drawable/ic_baseline_settings_24"
-            android:title="SETTINGS" />
+            android:title="@string/nav_menu_settings" />
     </group>
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/activity_main_drawer_logout"
             android:icon="@drawable/ic_baseline_power_settings_new_24"
-            android:title="LOGOUT" />
+            android:title="@string/nav_menu_logout" />
     </group>
 
 </menu>

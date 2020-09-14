@@ -30,7 +30,7 @@ public class WorkmatesFragment extends Fragment {
 
     private void configureToolbar (View root){
         MainActivity activity = ((MainActivity)root.getContext());
-        activity.getSupportActionBar().setTitle("Available workmates");
+        activity.getSupportActionBar().setTitle(R.string.main_activity_title_workmates);
     }
 
     private void configureRecyclerView(View root) {

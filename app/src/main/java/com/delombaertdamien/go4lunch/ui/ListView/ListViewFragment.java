@@ -41,6 +41,6 @@ public class ListViewFragment extends Fragment {
 
     private void configureToolbar (View root){
         MainActivity activity = ((MainActivity)root.getContext());
-        activity.getSupportActionBar().setTitle("I'm Hungry!");
+        activity.getSupportActionBar().setTitle(R.string.main_activity_title);
     }
 }

@@ -60,7 +60,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CALL"
+                    android:text="@string/detail_activity_button_call"
                     android:textColor="@color/colorPrimary"
                     />
             </LinearLayout>
@@ -79,7 +79,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LIKE"
+                    android:text="@string/detail_activity_button_like"
                     android:textColor="@color/colorPrimary"
                     />
             </LinearLayout>
@@ -98,7 +98,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="WEBSITE"
+                    android:text="@string/detail_activity_button_website"
                     android:textColor="@color/colorPrimary"
                     />
             </LinearLayout>
