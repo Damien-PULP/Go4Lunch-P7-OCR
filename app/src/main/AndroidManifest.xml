@@ -22,7 +22,9 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCCP1YOJJV8mfU6pGY2L9v3AWA0y0cL2j0"/>
+            android:value="AIzaSyArhuiDxRj8manHc0BihLXgQ-E6qjJw6r4"/>
+
+
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

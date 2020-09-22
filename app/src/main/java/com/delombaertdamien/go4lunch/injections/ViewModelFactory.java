@@ -1,6 +1,5 @@
 package com.delombaertdamien.go4lunch.injections;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 

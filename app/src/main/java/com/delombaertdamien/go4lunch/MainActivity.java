@@ -7,11 +7,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.delombaertdamien.go4lunch.injections.Injection;
 import com.delombaertdamien.go4lunch.injections.ViewModelFactory;
+import com.delombaertdamien.go4lunch.service.UserHelper;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -107,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
