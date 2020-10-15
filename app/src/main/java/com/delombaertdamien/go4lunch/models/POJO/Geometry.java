@@ -1,5 +1,6 @@
-package com.delombaertdamien.go4lunch.models.Places;
+package com.delombaertdamien.go4lunch.models.POJO;
 
+import com.delombaertdamien.go4lunch.models.POJO.Location;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,24 +9,23 @@ public class Geometry {
     @SerializedName("location")
     @Expose
     private Location location;
-    @SerializedName("viewport")
-    @Expose
-    private Viewport viewport;
 
+    /**
+     *
+     * @return
+     * The location
+     */
     public Location getLocation() {
         return location;
     }
 
+    /**
+     *
+     * @param location
+     * The location
+     */
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public Viewport getViewport() {
-        return viewport;
-    }
-
-    public void setViewport(Viewport viewport) {
-        this.viewport = viewport;
     }
 
 }

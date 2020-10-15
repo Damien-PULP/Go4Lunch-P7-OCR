@@ -129,9 +129,9 @@
     <string name="connection_error_no_internet">Erreur pas d\'internet</string>
     <string name="connection_error_unknown">Erreur inconnue</string>
     <!-- FACEBOOK PURPOSE -->
-    <string name="facebook_application_id" translatable="false">367187284285691</string>
-    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb367187284285691</string>
-    <string name="title_activity_maps">Carte</string>µ
+    <string name="facebook_application_id" translatable="false">3383717505082210</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb3383717505082210</string>
+    <string name="title_activity_maps">Carte</string>
     <!--ALERT MESSAGE-->
     <string name="alert_message_no_gps">Votre GPS semble désactivé, voulez-vous bien l\'activer?</string>
     <!--NAV MENU-->
@@ -142,6 +142,8 @@
     <string name="detail_activity_button_call">APPELER</string>
     <string name="detail_activity_button_like">J\'AIME</string>
     <string name="detail_activity_button_website">SITE WEB</string>
+    <string name="place_opening">Ouvert</string>
+    <string name="place_closed">Fermé</string>
     <!--SETTINGS ACTIVITY-->
     <string name="settings_activity_title">Paramètres</string>
     <string name="settings_activity_text_notification">Notification</string>
@@ -151,5 +153,15 @@
     <!--MAIN ACTIVITY-->
     <string name="main_activity_title">J\'ai faim !</string>
     <string name="main_activity_title_workmates">Collègues disponnibles</string>
+    <string name="workmate_fragment_is_eating"> mange </string>
+    <string name="alert_msg_today_eat">Aujourd\'hui vous allez manger au</string>
+    <string name="item_is_eating"> mange au </string>
+    <string name="joined_state_workmates"> a rejoint !</string>
+    <string name="not_decided_state_workmates"> n\'a pas encore décidé</string>
+    <string name="alert_not_again_choose">Tu n\'as pas encore choisi ton déjeuner</string>
+    <string name="no_restaurant">Pas de restaurant aux alentours</string>
+    <string name="notification_title">New message</string>
+    <string name="default_notification_channel_id">messages_notification</string>
+    <string name="messages">messages</string>
 
 </resources>

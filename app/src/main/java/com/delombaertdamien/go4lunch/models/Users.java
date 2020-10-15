@@ -2,8 +2,9 @@ package com.delombaertdamien.go4lunch.models;
 
 import androidx.annotation.Nullable;
 
-import com.google.firebase.firestore.ServerTimestamp;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Users {
@@ -14,14 +15,18 @@ public class Users {
     @Nullable private String urlPicture;
     //PLACE INFORMATION
     @Nullable private String lunchPlaceID;
-    @Nullable private Date timeStampLunchPlace;
+    @Nullable String dateLunchPlace;
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YY");
 
-    public Users(String userId, String username, @Nullable String urlPicture, @Nullable String lunchPlaceID, @Nullable Date timeStampLunchPlace) {
+    public Users (){
+
+    }
+    public Users(String userId, String username, @Nullable String urlPicture, @Nullable String lunchPlaceID, @Nullable String dateLunchPlace) {
         this.userId = userId;
         this.username = username;
         this.urlPicture = urlPicture;
         this.lunchPlaceID = lunchPlaceID;
-        this.timeStampLunchPlace = timeStampLunchPlace;
+        this.dateLunchPlace = dateLunchPlace;
     }
 
     //GETTER
@@ -37,11 +42,46 @@ public class Users {
     }
     @Nullable
     public String getLunchPlaceID() {
-        return lunchPlaceID;
+
+        Calendar cal = getDateLunchPlace();
+
+        if(cal != null){
+            Calendar currentC = Calendar.getInstance();
+
+            if(currentC.get(Calendar.DAY_OF_YEAR) != cal.get(Calendar.DAY_OF_YEAR)){
+                return lunchPlaceID;
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+        //return lunchPlaceID;
+
     }
-    @ServerTimestamp
     @Nullable
-    public Date getTimeStampLunchPlace (){ return timeStampLunchPlace; }
+    public Calendar getDateLunchPlace(){
+        if(dateLunchPlace != null) {
+            Date date;
+            try {
+                date = formatDate.parse(dateLunchPlace);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            if(date != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                return calendar;
+            }else{
+                return null;
+            }
+
+        }else{
+            return null;
+        }
+    }
     //SETTER
     public void setUserId(String userId) {
         this.userId = userId;
@@ -55,6 +95,6 @@ public class Users {
     public void setLunchPlaceID(@Nullable String lunchPlaceID) {
         this.lunchPlaceID = lunchPlaceID;
     }
-    public void setTimeStampLunchPlace(@Nullable Date timeStampLunchPlace){ this.timeStampLunchPlace = timeStampLunchPlace; }
+    public void setDateLunchPlace(@Nullable String dateLunchPlace){ this.dateLunchPlace = dateLunchPlace; }
 
 }

@@ -13,105 +13,115 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@color/colorPrimary">
-
-        <TextView
-            android:id="@+id/details_activity_name_of_restaurant"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nom du resto"
-            android:textColor="@color/colorBlank"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-        <TextView
-            android:id="@+id/details_activity_information_of_restaurant"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="type de restaurant - adresse du restaurant"
-            android:textColor="@color/colorBlank"
-            app:layout_constraintTop_toBottomOf="@id/details_activity_name_of_restaurant"/>
+            android:background="@color/colorPrimary"
+            android:padding="16dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/details_activity_name_of_restaurant"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nom du resto"
+                android:textColor="@color/colorBlank"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/details_activity_information_of_restaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="type de restaurant - adresse du restaurant"
+                android:textColor="@color/colorBlank"
+                app:layout_constraintTop_toBottomOf="@id/details_activity_name_of_restaurant" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:orientation="horizontal"
             android:gravity="center_horizontal"
-            >
+            android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/detail_activity_call_place_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
                 android:layout_margin="8dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_baseline_call_24"/>
+                    android:src="@drawable/ic_baseline_call_24" />
+
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_activity_button_call"
-                    android:textColor="@color/colorPrimary"
-                    />
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/detail_activity_favorite_place_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:layout_margin="8dp">
+                android:orientation="vertical">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_baseline_star_24"/>
+                    android:src="@drawable/ic_baseline_star_24" />
+
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_activity_button_like"
-                    android:textColor="@color/colorPrimary"
-                    />
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/detail_activity_website_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:layout_margin="8dp">
+                android:orientation="vertical">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_baseline_language_24"/>
+                    android:src="@drawable/ic_baseline_language_24" />
+
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_activity_button_website"
-                    android:textColor="@color/colorPrimary"
-                    />
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
         </LinearLayout>
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_workmate"
-            />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/detail_activity_workmates_of_place_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/item_workmate" />
         </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>

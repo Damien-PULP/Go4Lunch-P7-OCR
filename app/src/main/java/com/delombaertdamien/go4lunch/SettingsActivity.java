@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.delombaertdamien.go4lunch.injections.Injection;
-import com.delombaertdamien.go4lunch.injections.ViewModelFactory;
+import com.delombaertdamien.go4lunch.injections.InjectionMain;
+import com.delombaertdamien.go4lunch.injections.MainViewModelFactory;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -56,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void configureViewModel() {
-        ViewModelFactory factory = Injection.provideViewModelFactory(this);
+        MainViewModelFactory factory = InjectionMain.provideViewModelFactory(this);
         viewModel = new ViewModelProvider(this,factory).get(MainViewModel.class);
     }
 

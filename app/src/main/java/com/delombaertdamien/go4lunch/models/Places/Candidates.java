@@ -3,13 +3,14 @@ package com.delombaertdamien.go4lunch.models.Places;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Candidates {
 
     @SerializedName("candidates")
     @Expose
-    private List<Candidate> candidates = null;
+    private List<Candidate> candidates = new ArrayList<>();
     @SerializedName("debug_log")
     @Expose
     private DebugLog debugLog;

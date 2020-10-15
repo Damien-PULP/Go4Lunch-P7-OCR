@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">Go4Lunch</string>
+    <string name="app_name">Go4Lunch</string>
 
     <!-- LOG ACTIVITY -->
     <string name="title_activity_login">LoginActivity</string>
@@ -129,8 +129,8 @@
     <string name="connection_error_no_internet">Error no internet</string>
     <string name="connection_error_unknown">Unknown error</string>
     <!-- FACEBOOK PURPOSE -->
-    <string name="facebook_application_id" translatable="false">367187284285691</string>
-    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb367187284285691</string>
+    <string name="facebook_application_id" translatable="false">3383717505082210</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb3383717505082210</string>
     <string name="title_activity_maps">Map</string>
     <!--ALERT MESSAGE-->
     <string name="alert_message_no_gps">Your GPS seems to be disabled, do you want to enable it?</string>
@@ -142,6 +142,8 @@
     <string name="detail_activity_button_call">CALL</string>
     <string name="detail_activity_button_like">LIKE</string>
     <string name="detail_activity_button_website">WEBSITE</string>
+    <string name="place_opening">Open</string>
+    <string name="place_closed">Close</string>
     <!--SETTINGS ACTIVITY-->
     <string name="settings_activity_title">Settings</string>
     <string name="settings_activity_text_notification">Notification</string>
@@ -151,5 +153,15 @@
     <!--MAIN ACTIVITY-->
     <string name="main_activity_title">I\'am hungry !</string>
     <string name="main_activity_title_workmates">Available workmates</string>
+    <string name="workmate_fragment_is_eating">is eating</string>
+    <string name="alert_msg_today_eat">Today you will eat at </string>
+    <string name="item_is_eating"> is eating </string>
+    <string name="joined_state_workmates"> is joining!</string>
+    <string name="not_decided_state_workmates"> hasn\'t decided yet</string>
+    <string name="alert_not_again_choose">you have not again choose your lunch</string>
+    <string name="no_restaurant">No restaurant around</string>
+    <string name="notification_title">New message</string>
+    <string name="default_notification_channel_id">messages_notification</string>
+    <string name="messages">messages</string>
 
 </resources>

@@ -1,13 +1,12 @@
 package com.delombaertdamien.go4lunch.ui.MapView;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -15,63 +14,43 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.delombaertdamien.go4lunch.DI.DI;
 import com.delombaertdamien.go4lunch.MainActivity;
+import com.delombaertdamien.go4lunch.MainViewModel;
 import com.delombaertdamien.go4lunch.R;
-import com.delombaertdamien.go4lunch.models.Places.Candidate;
-import com.delombaertdamien.go4lunch.models.Places.Candidates;
+import com.delombaertdamien.go4lunch.injections.InjectionMain;
+import com.delombaertdamien.go4lunch.injections.MainViewModelFactory;
+import com.delombaertdamien.go4lunch.models.POJO.Result;
+import com.delombaertdamien.go4lunch.models.POJO.ResultsPlaces;
 import com.delombaertdamien.go4lunch.service.MapService;
 import com.delombaertdamien.go4lunch.utils.PlacesCall;
-import com.delombaertdamien.go4lunch.utils.PlacesService;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static androidx.core.content.ContextCompat.getSystemService;
 
-public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
+public class MapViewFragment extends Fragment implements PlacesCall.Callbacks, GoogleMap.OnMarkerClickListener {
 
     //UI
     private FloatingActionButton mFab;
@@ -84,12 +63,17 @@ public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
 
     //API SERVICE
     private MapService mapService;
+    //VIEW MODEL
+    private MainViewModel viewModel;
+
+    private ProgressDialog progressDialog;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_map_view, container, false);
         configureToolbar(root);
+        configureViewModel();
         init();
         initPlaces();
         initMaps();
@@ -99,6 +83,9 @@ public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
 
     private void init() {
         mapService = DI.getMapApiService();
+        // SHOW DIALOG LOADING
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.show();
     }
     private void initMaps() {
 
@@ -109,10 +96,25 @@ public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
             public void onMapReady(final GoogleMap googleMap) {
 
                 mMap = googleMap;
+
+                try {
+                    // Customise the styling of the base map using a JSON object defined
+                    // in a raw resource file.
+                    boolean success = googleMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    getActivity(), R.raw.map_style));
+
+                    if (!success) {
+                        Log.e("MapFragment", "Style parsing failed.");
+                    }
+                } catch (Resources.NotFoundException e) {
+                    Log.e("MapFragment", "Can't find style. Error: ", e);
+                }
+
                 mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                        mapService.addMarker(mMap, latLng, "restaurant");
+                        mapService.addMarker(mMap, latLng, "restaurant", getActivity(), true);
                     }
                 });
                 if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -137,7 +139,10 @@ public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
 
     }
 
-
+    private void configureViewModel() {
+        MainViewModelFactory mMainViewModelFactory = InjectionMain.provideViewModelFactory(getActivity());
+        this.viewModel = new ViewModelProvider(this, mMainViewModelFactory).get(MainViewModel.class);
+    }
     private void configureToolbar(View root) {
         MainActivity activity = ((MainActivity) root.getContext());
         activity.getSupportActionBar().setTitle(R.string.main_activity_title);
@@ -168,13 +173,20 @@ public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
     private void zoomToUserLocation() {
 
         if(statusCheck()) {
-            @SuppressLint("MissingPermission") Task<Location> locationTask = fusedLocationProviderClient.getLastLocation();
+            Task<Location> locationTask = viewModel.getUserLocation();
+            mMap.setOnMarkerClickListener(this);
             locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mapService.zoomInOnAPlace(mMap, latLng, 15);
-                    callAPI(location.getLatitude() + ","+ location.getLongitude());
+                    if(location != null) {
+                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mapService.zoomInOnAPlace(mMap, latLng, 15);
+                       // callAPI(location.getLatitude() + ","+ location.getLongitude());
+
+                    }
+                    //TODO DELETE WHEN API IS ENABLED
+                    progressDialog.dismiss();
+
                 }
             });
         }else{
@@ -214,12 +226,20 @@ public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
 
     // REQUEST API WITH RETROFIT
     private void callAPI (String location){
-        PlacesCall.fetchNearbyPlaces(this, location);
+        viewModel.getNearbyPlaces(this, location);
     }
     @Override
-    public void onResponse(Candidates places) {
-        if(places.getCandidates() != null) {
-            List<Candidate> candidatesPlaces = places.getCandidates();
+    public void onResponse(ResultsPlaces places) {
+        if(places.getResults()!= null) {
+            mMap.clear();
+            List<Result> candidatesPlaces = places.getResults();
+            for(int i = 0; i < candidatesPlaces.size(); i++){
+                Log.d("MapsViewFragment", "Name of restaurant : " + candidatesPlaces.get(i).getName());
+                LatLng latLng = new LatLng(candidatesPlaces.get(i).getGeometry().getLocation().getLat(), candidatesPlaces.get(i).getGeometry().getLocation().getLng());
+                mapService.addMarker(mMap,latLng, candidatesPlaces.get(i).getName(), getActivity(), true);
+            }
+            // DISMISS DIALOG LOADING
+            progressDialog.dismiss();
             Log.d("MapsViewFragment", "Status of candidates "+ places.getStatus());
             Log.d("MapsViewFragment", "The size of list is "+ candidatesPlaces.size());
         }else{
@@ -231,5 +251,12 @@ public class MapViewFragment extends Fragment implements  PlacesCall.Callbacks {
     @Override
     public void onFailure() {
         Log.d("MapsViewFragment", "fail bro");
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Log.d("MapsViewFragment", "The restaurant is : " + marker.getTitle());
+
+        return true;
     }
 }

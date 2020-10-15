@@ -4,23 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.delombaertdamien.go4lunch.injections.Injection;
-import com.delombaertdamien.go4lunch.injections.ViewModelFactory;
-import com.delombaertdamien.go4lunch.service.UserHelper;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.delombaertdamien.go4lunch.injections.InjectionMain;
+import com.delombaertdamien.go4lunch.injections.MainViewModelFactory;
+import com.delombaertdamien.go4lunch.models.Users;
+import com.delombaertdamien.go4lunch.utils.FirestoreCall;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,7 +30,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FirestoreCall.CallbackFirestoreUser {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -60,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureViewModel() {
-        ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory(this);
-        this.viewModel = new ViewModelProvider(this,mViewModelFactory).get(MainViewModel.class);
+        MainViewModelFactory mMainViewModelFactory = InjectionMain.provideViewModelFactory(this);
+        this.viewModel = new ViewModelProvider(this, mMainViewModelFactory).get(MainViewModel.class);
     }
 
     private void configureBottomNavigationBar (){
@@ -71,8 +68,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.id.navigation_map_view, R.id.navigation_list_view, R.id.navigation_workmates)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
         NavigationUI.setupWithNavController(navView, navController);
+        //Navigation
     }
     private void configureUI() {
 
@@ -110,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -118,6 +114,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id){
             case R.id.activity_main_drawer_your_lunch:
                 // detail restaurant chose
+                FirestoreCall.getCurrentUser(this);
+                break;
+            case R.id.activity_main_drawer_messages_activity:
+                Intent intentChat = new Intent(this, ChatActivity.class);
+                startActivity(intentChat);
                 break;
             case R.id.activity_main_drawer_settings:
                 // switch settings
@@ -147,5 +148,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else{
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onSuccessGetCurrentUser(Users user) {
+        if(user.getLunchPlaceID() != null) {
+            Intent intentYourLunch = new Intent(this, DetailsActivity.class);
+            intentYourLunch.putExtra("placeID", user.getLunchPlaceID());
+            startActivity(intentYourLunch);
+        }else{
+            Toast.makeText(this, R.string.alert_not_again_choose, Toast.LENGTH_LONG).show();
+        }
+        
+    }
+
+    @Override
+    public void onFailureGetCurrentUser(Exception e) {
+
     }
 }

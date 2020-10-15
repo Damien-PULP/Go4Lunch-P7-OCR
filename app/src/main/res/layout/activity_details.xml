@@ -24,6 +24,7 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
+                android:id="@+id/details_activity_image_place"
                 android:src="@drawable/exemple_restaurant"
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
@@ -35,13 +36,13 @@
     <include layout="@layout/content_scrolling" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:id="@+id/detail_activity_fab_favorites"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_baseline_is_check_circle_24"
-        app:backgroundTint="@color/colorBlank"
+        android:backgroundTint="@color/colorBlank"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end" />
 

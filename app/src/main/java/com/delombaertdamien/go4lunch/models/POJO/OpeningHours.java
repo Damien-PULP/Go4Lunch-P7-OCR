@@ -1,4 +1,4 @@
-package com.delombaertdamien.go4lunch.models.Places;
+package com.delombaertdamien.go4lunch.models.POJO;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

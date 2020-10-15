@@ -1,6 +1,10 @@
 package com.delombaertdamien.go4lunch.models.Places;
 
         import java.util.List;
+
+        import com.delombaertdamien.go4lunch.models.POJO.Geometry;
+        import com.delombaertdamien.go4lunch.models.POJO.OpeningHours;
+        import com.delombaertdamien.go4lunch.models.POJO.Photo;
         import com.google.gson.annotations.Expose;
         import com.google.gson.annotations.SerializedName;
 

@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,11 +14,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.delombaertdamien.go4lunch.DI.DI;
-import com.delombaertdamien.go4lunch.injections.Injection;
-import com.delombaertdamien.go4lunch.injections.ViewModelFactory;
 import com.delombaertdamien.go4lunch.service.AuthenticationService;
 import com.delombaertdamien.go4lunch.service.UserHelper;
-import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,20 +23,19 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Arrays;
-import java.util.List;
-
 
 public class LogActivity extends AppCompatActivity {
 
     //UI
     private ConstraintLayout mConstraintLayout;
-    Button mButtonLogWithFacebook;
-    Button mButtonLogWithGoogle;
+    private Button mButtonLogWithFacebook;
+    private Button mButtonLogWithGoogle;
 
     private AuthenticationService authenticationService;
     // Identifier Sign in Activity
     private static final int RC_SIGN_IN = 123;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,21 +77,20 @@ public class LogActivity extends AppCompatActivity {
     public void SignInActivityWithGoogle() {
         startActivityForResult(
                 authenticationService.getAuthUIOfSignWithGoogle(), RC_SIGN_IN);
-
     }
     public void SignInActivityWithFacebook() {
         startActivityForResult(
                 authenticationService.getAuthUIOfSignWithFacebook(), RC_SIGN_IN);
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
         this.handleResponseAfterSignIn(requestCode, resultCode, data);
-
     }
-
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data) {
         IdpResponse response = IdpResponse.fromResultIntent(data);
 
@@ -118,7 +113,6 @@ public class LogActivity extends AppCompatActivity {
     }
 
     private void createUserInFirestore (){
-
         if(this.getCurrentUser() != null){
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
@@ -136,7 +130,6 @@ public class LogActivity extends AppCompatActivity {
             }
         };
     }
-
 
     @Nullable
     protected FirebaseUser getCurrentUser() {
