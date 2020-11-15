@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LogActivity">
+    tools:context=".ui.activity.LogActivity">
 
     <ProgressBar
         android:id="@+id/log_activity_progress_bar"

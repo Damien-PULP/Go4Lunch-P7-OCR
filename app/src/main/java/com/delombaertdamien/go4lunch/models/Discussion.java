@@ -1,8 +1,14 @@
 package com.delombaertdamien.go4lunch.models;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class Discussion {
 
+    //ONLY DISCUSSION
     private String discussionID;
+    private String lastMessage;
     //USER ONE
     private String userOneID;
     private String userOneName;
@@ -14,10 +20,10 @@ public class Discussion {
 
     public Discussion() {
     }
-
-    public Discussion(String discussionID, String nameUserOne, String userOneID, String userOneUrlIcon, String nameUserTwo, String userTwoID, String userTwoUrlIcon) {
+    public Discussion(String discussionID, String nameUserOne, String userOneID, String userOneUrlIcon, String nameUserTwo, String userTwoID, String userTwoUrlIcon, String lastMessage) {
 
         this.discussionID = discussionID;
+        this.lastMessage = lastMessage;
 
         this.userOneName = nameUserOne;
         this.userOneUrlIcon = userOneUrlIcon;
@@ -31,6 +37,9 @@ public class Discussion {
     // --- GETTER --- //
     public String getDiscussionID() {
         return discussionID;
+    }
+    public String getLastMessage() {
+        return lastMessage;
     }
 
     public String getNameUserOne() {
@@ -57,6 +66,10 @@ public class Discussion {
     public void setDiscussionID(String discussionID) {
         this.discussionID = discussionID;
     }
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
     public void setNameUserOne(String name) {
         this.userOneName = name;
     }

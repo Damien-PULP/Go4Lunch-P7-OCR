@@ -13,20 +13,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.delombaertdamien.go4lunch.ChatActivity;
+import com.delombaertdamien.go4lunch.ui.activity.ChatActivity;
 import com.delombaertdamien.go4lunch.R;
-import com.delombaertdamien.go4lunch.models.POJO.ResultDetails;
+import com.delombaertdamien.go4lunch.models.POJO.Places.ResultDetails;
 import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.utils.PlacesCall;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class AdaptorListViewWorkmates extends RecyclerView.Adapter<AdaptorListViewWorkmates.WorkmatesViewHolder> {
 
     private List<Users> users = new ArrayList<>();
-    private Context context;
-    private boolean isUsingInWorkmatesFragment;
+    private final Context context;
+    private final boolean isUsingInWorkmatesFragment;
+
 
     public AdaptorListViewWorkmates(Context context, boolean isUsingInWorkmatesFragment) {
         this.context = context;
@@ -40,23 +46,22 @@ public class AdaptorListViewWorkmates extends RecyclerView.Adapter<AdaptorListVi
         View view = inflater.inflate(R.layout.item_workmate, parent, false);
         return new WorkmatesViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(WorkmatesViewHolder holder, int position) {
         holder.bind(context, users.get(position), isUsingInWorkmatesFragment);
     }
-
     @Override
     public int getItemCount() {
         return users.size();
     }
-
+    // To update data of this adapter
     public void updateData(List<Users> users) {
         this.users = users;
         notifyDataSetChanged();
     }
 
-    protected class WorkmatesViewHolder extends RecyclerView.ViewHolder implements PlacesCall.GetDetailOfPlaceCallbacks {
+
+    protected static class WorkmatesViewHolder extends RecyclerView.ViewHolder implements PlacesCall.GetDetailOfPlaceCallbacks {
 
         private final LinearLayout item;
         private final ImageView icon;
@@ -70,7 +75,6 @@ public class AdaptorListViewWorkmates extends RecyclerView.Adapter<AdaptorListVi
 
         public WorkmatesViewHolder(View itemView) {
             super(itemView);
-
             icon = itemView.findViewById(R.id.item_workmate_icon);
             text = itemView.findViewById(R.id.item_workmate_text);
             item = itemView.findViewById(R.id.item_workmate_item);
@@ -97,9 +101,11 @@ public class AdaptorListViewWorkmates extends RecyclerView.Adapter<AdaptorListVi
             this.item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                    intent.putExtra(EXTRA_ID_USER, user.getUserId());
-                    view.getContext().startActivity(intent);
+                    if(!user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                        intent.putExtra(EXTRA_ID_USER, user.getUserId());
+                        view.getContext().startActivity(intent);
+                    }
                 }
             });
 
@@ -109,17 +115,17 @@ public class AdaptorListViewWorkmates extends RecyclerView.Adapter<AdaptorListVi
         public void onResponseGetDetailOfPlace(ResultDetails result) {
             if (isUsingInWorkmatesFragment) {
                 text.setText(user.getUsername() + " " + itemView.getResources().getString(R.string.item_is_eating) + " " + result.getResult().getName());
-                text.setEnabled(true);
             } else {
                 text.setText(user.getUsername() + " " + itemView.getResources().getString(R.string.joined_state_workmates));
-                text.setEnabled(true);
             }
+            text.setVisibility(View.VISIBLE);
         }
-
         @Override
         public void onFailureGetDetailOfPlace(Throwable t) {
             text.setText(user.getUsername());
             text.setEnabled(false);
         }
+
     }
+
 }

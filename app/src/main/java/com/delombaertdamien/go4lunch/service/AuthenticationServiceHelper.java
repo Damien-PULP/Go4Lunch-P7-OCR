@@ -8,6 +8,10 @@ import com.firebase.ui.auth.AuthUI;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class AuthenticationServiceHelper implements AuthenticationService {
 
     @Override
@@ -23,7 +27,6 @@ public class AuthenticationServiceHelper implements AuthenticationService {
                         .setLogo(R.mipmap.ic_launcher_logo)
                         .build());
     }
-
     @Override
     public Intent getAuthUIOfSignWithGoogle() {
         List<AuthUI.IdpConfig> providers = Arrays.asList(

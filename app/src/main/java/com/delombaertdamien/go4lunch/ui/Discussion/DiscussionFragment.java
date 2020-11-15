@@ -15,48 +15,50 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.delombaertdamien.go4lunch.ChatActivity;
-import com.delombaertdamien.go4lunch.ChatViewModel;
+import com.delombaertdamien.go4lunch.ui.activity.ChatActivity;
+import com.delombaertdamien.go4lunch.ui.activity.ChatViewModel;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.Discussion;
 import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.ui.adapter.AdaptorListViewDiscussions;
-import com.delombaertdamien.go4lunch.utils.DiscussionsMaker;
 import com.delombaertdamien.go4lunch.utils.FirestoreCall;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class DiscussionFragment extends Fragment implements FirestoreCall.CallbackFirestoreDiscussion, ChatViewModel.ListenersStateRequestGetUser {
 
-    //UI
-    private RecyclerView recyclerViewDiscussion;
-    private AdaptorListViewDiscussions adapter;
-    //Toolbar
+    // TOOLBAR
     private ImageView iconToolbar;
     private TextView nameToolbar;
+    // ADAPTER
+    private AdaptorListViewDiscussions adapter;
 
-    private Users currentUserObj;
     private String currentUserID;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_chat_discussion, container, false);
 
-        this.configureUI(root);
-        this.getCurrentUser();
+        configureUI(root);
+        getCurrentUser();
         return root;
     }
 
+    // init UI
     private void configureUI(View root) {
-        recyclerViewDiscussion = root.findViewById(R.id.fragment_chat_discussion_recycler_view);
+        RecyclerView recyclerViewDiscussion = root.findViewById(R.id.fragment_chat_discussion_recycler_view);
         recyclerViewDiscussion.setLayoutManager(new LinearLayoutManager(getContext()));
         iconToolbar = root.findViewById(R.id.fragment_chat_discussion_toolbar_icon);
         nameToolbar = root.findViewById(R.id.fragment_chat_discussion_toolbar_name);
         adapter = new AdaptorListViewDiscussions();
         recyclerViewDiscussion.setAdapter(adapter);
     }
-
+    // Get current user - callback to get user is this
     private void getCurrentUser() {
         currentUserID = FirebaseAuth.getInstance().getUid();
         ChatActivity activity = (ChatActivity) getActivity();
@@ -66,10 +68,29 @@ public class DiscussionFragment extends Fragment implements FirestoreCall.Callba
         }
     }
 
+    // Get all discussion of this user
     private void getAllDiscussions() {
         FirestoreCall.getAllDiscussion(this);
     }
 
+    // Response of get current object user && call - 'getAllDiscussions'
+    @Override
+    public void onSuccessGetUser(Users user) {
+        if(user.getUrlPicture() != null){
+            Glide.with(getContext())
+                    .load(user.getUrlPicture())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(iconToolbar);
+        }
+        nameToolbar.setText(user.getUsername());
+        this.getAllDiscussions();
+    }
+    @Override
+    public void onFailedGetUser() {
+
+    }
+
+    // Response of Method 'getAllDiscussions' && update adapter with List discussions
     @Override
     public void onSuccessGetAllDiscussions(List<Discussion> discussions) {
         adapter.updateData(discussions, currentUserID);
@@ -78,30 +99,5 @@ public class DiscussionFragment extends Fragment implements FirestoreCall.Callba
     public void onFailureGetAllDiscussions(Exception e) {
         Log.e("DiscussionFragment", e.getMessage());
     }
-
-    // --- GET USER --- //
-    @Override
-    public void onSuccessGetUser(Users user) {
-        currentUserObj = user;
-        if(currentUserObj.getUrlPicture() != null){
-            Glide.with(getContext())
-                    .load(currentUserObj.getUrlPicture())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(iconToolbar);
-        }
-        nameToolbar.setText(currentUserObj.getUsername());
-        this.getAllDiscussions();
-    }
-    @Override
-    public void onFailedGetUser(Exception e) {
-
-    }
-
-    // Never use
-    @Override
-    public void onSuccessGetUserSpeaker(Users user) {
-
-    }
-
 
 }

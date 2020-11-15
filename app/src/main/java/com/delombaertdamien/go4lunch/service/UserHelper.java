@@ -3,6 +3,7 @@ package com.delombaertdamien.go4lunch.service;
 import androidx.annotation.Nullable;
 
 import com.delombaertdamien.go4lunch.models.Users;
+import com.delombaertdamien.go4lunch.models.UsersWithoutPlaceId;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -15,16 +16,20 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
 
+    // GET ALL
     public static CollectionReference getUsersCollection(){return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);}
-
     //CREATE
-    public static Task<Void> createUser(String uid, String username, String urlPicture){
-        Users user = new Users(uid, username, urlPicture, null, null);
-        return UserHelper.getUsersCollection().document(uid).set(user, SetOptions.merge());
+    public static Task<Void> createUser(String uid, String username, String urlPicture, String token){
+        UsersWithoutPlaceId usersWithoutPlaceId = new UsersWithoutPlaceId(uid,username, urlPicture, token);
+        return UserHelper.getUsersCollection().document(uid).set(usersWithoutPlaceId, SetOptions.merge());
     }
     //GET
     public static Task<DocumentSnapshot> getUser(String uid){
@@ -38,7 +43,6 @@ public class UserHelper {
     public static Task<QuerySnapshot> getAllUsers(){
         return UserHelper.getUsersCollection().get();
     }
-
     //GET
     public static Task<QuerySnapshot> getAllUsersByPlaceId(String placeID){
         return UserHelper.getUsersCollection().whereEqualTo("lunchPlaceID", placeID).get();
@@ -46,6 +50,10 @@ public class UserHelper {
     //UPDATE
     public static Task<Void> updateLunchPlace(String uid,String placeId, String timestampLunch){
         return UserHelper.getUsersCollection().document(uid).update("lunchPlaceID", placeId, "dateLunchPlace", timestampLunch);
+    }
+    //UPDATE
+    public static Task<Void> updateToken(String uid, String token){
+        return UserHelper.getUsersCollection().document(uid).update("token", token);
     }
     //DELETE
     public static Task<Void> deleteUser(String uid){return UserHelper.getUsersCollection().document(uid).delete(); }

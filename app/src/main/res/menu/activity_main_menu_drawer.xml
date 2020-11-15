@@ -11,6 +11,13 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/activity_main_drawer_favorite_activity"
+            android:icon="@drawable/ic_baseline_star_24"
+            android:title="@string/favorite_lunch" />
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
             android:id="@+id/activity_main_drawer_messages_activity"
             android:icon="@drawable/ic_baseline_message_24"
             android:title="@string/messages" />

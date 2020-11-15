@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.delombaertdamien.go4lunch.DetailsActivity;
+import com.delombaertdamien.go4lunch.ui.activity.DetailsActivity;
 import com.delombaertdamien.go4lunch.R;
-import com.delombaertdamien.go4lunch.models.POJO.Result;
+import com.delombaertdamien.go4lunch.models.POJO.Places.Result;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,16 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class AdaptorListViewRestaurant extends RecyclerView.Adapter<AdaptorListViewRestaurant.RestaurantViewHolder> {
 
     private List<Result> places = new ArrayList<>();
     private Map<String, Integer> map = new HashMap<>();
 
-    private Context context;
-
-    public AdaptorListViewRestaurant(Context context) {
-        this.context = context;
-    }
 
     @Override
     public RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,17 +40,15 @@ public class AdaptorListViewRestaurant extends RecyclerView.Adapter<AdaptorListV
         View view = inflater.inflate(R.layout.item_restaurant, parent, false);
         return new RestaurantViewHolder(view, map);
     }
-
     @Override
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
-        holder.bind(places.get(position), context);
+        holder.bind(places.get(position));
     }
-
     @Override
     public int getItemCount() {
         return places.size();
     }
-
+    // To update data of this adapter
     public void updateData(List<Result> data, Map<String, Integer> map) {
         this.map = map;
         this.places = data;
@@ -59,33 +56,32 @@ public class AdaptorListViewRestaurant extends RecyclerView.Adapter<AdaptorListV
     }
 
 
-    protected class RestaurantViewHolder extends RecyclerView.ViewHolder {
+    protected static class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
         private final ConstraintLayout item;
         private final ImageView icon;
         private final TextView name;
         private final TextView information;
         private final TextView hour;
-        private final TextView distance;
         private final TextView numberWorkmates;
 
         private final Map<String, Integer> map;
 
+        private final String EXTRA_NAME = "placeID";
+
         public RestaurantViewHolder(View itemView, Map<String, Integer> map) {
             super(itemView);
-
             this.map = map;
             item = itemView.findViewById(R.id.item_restaurant);
             icon = itemView.findViewById(R.id.item_restaurant_icon);
             name = itemView.findViewById(R.id.item_restaurant_name);
             information = itemView.findViewById(R.id.item_restaurant_information);
             hour = itemView.findViewById(R.id.item_restaurant_open_hour);
-            distance = itemView.findViewById(R.id.item_restaurant_distance);
+            TextView distance = itemView.findViewById(R.id.item_restaurant_distance);
             numberWorkmates = itemView.findViewById(R.id.item_restaurant_nb_workmate);
         }
 
-        public void bind(final Result place, final Context context) {
-
+        public void bind(final Result place) {
             name.setText(place.getName());
             if (place.getScope() != null) {
                 information.setText(place.getScope());
@@ -123,7 +119,7 @@ public class AdaptorListViewRestaurant extends RecyclerView.Adapter<AdaptorListV
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(), DetailsActivity.class);
-                    intent.putExtra("placeID", place.getPlaceId());
+                    intent.putExtra(EXTRA_NAME, place.getPlaceId());
                     view.getContext().startActivity(intent);
                 }
             });
@@ -136,6 +132,6 @@ public class AdaptorListViewRestaurant extends RecyclerView.Adapter<AdaptorListV
 
         }
 
-
     }
+
 }

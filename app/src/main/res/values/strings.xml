@@ -160,8 +160,12 @@
     <string name="not_decided_state_workmates"> hasn\'t decided yet</string>
     <string name="alert_not_again_choose">you have not again choose your lunch</string>
     <string name="no_restaurant">No restaurant around</string>
-    <string name="notification_title">New message</string>
+    <string name="notification_title">Go4Lunch, new notification !</string>
     <string name="default_notification_channel_id">messages_notification</string>
-    <string name="messages">messages</string>
+    <string name="messages">MESSAGES</string>
+    <string name="favorite_lunch">FAVORITE</string>
+    <string name="favorite_activity_title">My Favorite</string>
+    <string name="error_loading_firebase">Failed loading data, verify your connexion</string>
+    <string name="alert_message_no_internet">No internet, please active internet</string>
 
 </resources>

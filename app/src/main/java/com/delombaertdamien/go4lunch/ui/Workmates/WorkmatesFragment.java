@@ -2,6 +2,7 @@ package com.delombaertdamien.go4lunch.ui.Workmates;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +10,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.delombaertdamien.go4lunch.MainActivity;
-import com.delombaertdamien.go4lunch.MainViewModel;
+import com.delombaertdamien.go4lunch.ui.activity.MainActivity;
 import com.delombaertdamien.go4lunch.R;
-import com.delombaertdamien.go4lunch.injections.InjectionMain;
-import com.delombaertdamien.go4lunch.injections.MainViewModelFactory;
 import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.ui.adapter.AdaptorListViewWorkmates;
 import com.delombaertdamien.go4lunch.utils.FirestoreCall;
@@ -27,53 +24,55 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class WorkmatesFragment extends Fragment implements FirestoreCall.CallbackFirestore {
 
-    private RecyclerView mRecyclerViewWorkmates;
+    // ADAPTER
     private AdaptorListViewWorkmates mAdapterListView;
-
+    // PROGRESS DIALOG
     ProgressDialog progressDialog;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View root = inflater.inflate(R.layout.fragment_workmates, container, false);
-        this.configureToolbar(root);
-        this.init();
-        this.configureRecyclerView(root);
-        this.getAllUsers();
+
+        configureToolbar(root);
+        initUI(root);
+        getAllUsers();
         return root;
     }
 
-    private void init() {
-        // SHOW LOADING DIALOG
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.show();
-    }
-
+    // Configure information into toolbar
     private void configureToolbar (View root){
         MainActivity activity = ((MainActivity)root.getContext());
         activity.getSupportActionBar().setTitle(R.string.main_activity_title_workmates);
     }
-
-    private void configureRecyclerView(View root) {
-        mRecyclerViewWorkmates = root.findViewById(R.id.fragment_workmates_recycler_view);
+    // Configure UI with information
+    private void initUI(View root) {
+        // SHOW LOADING DIALOG
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.show();
+        // Recycler view
+        RecyclerView mRecyclerViewWorkmates = root.findViewById(R.id.fragment_workmates_recycler_view);
 
         mAdapterListView = new AdaptorListViewWorkmates(getActivity(), true);
         mRecyclerViewWorkmates.setAdapter(mAdapterListView);
         mRecyclerViewWorkmates.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
-
+    // Get all user of this application
     private void getAllUsers(){
         FirestoreCall.getAllUsers(this);
         FirestoreCall.setUpdateDataRealTime(this);
     }
 
-    @Nullable
     protected FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    // Response of Method 'getAllUsers' - List user
     @Override
     public void onSuccessGetUsers(List<Users> users) {
         String currentUserID = getCurrentUser().getUid();
@@ -86,9 +85,8 @@ public class WorkmatesFragment extends Fragment implements FirestoreCall.Callbac
         mAdapterListView.updateData(workmatesList);
         progressDialog.dismiss();
     }
-
     @Override
     public void onFailureGetUsers(Exception e) {
-
+        Log.e("WorkmatesFragment", e.getMessage());
     }
 }

@@ -5,11 +5,15 @@ import android.content.Context;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.delombaertdamien.go4lunch.MainViewModel;
+import com.delombaertdamien.go4lunch.ui.activity.MainViewModel;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class MainViewModelFactory implements ViewModelProvider.Factory {
 
-    private Context context;
+    private final Context context;
     MainViewModelFactory(Context context){
     this.context = context;
     }

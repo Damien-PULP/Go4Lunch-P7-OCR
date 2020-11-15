@@ -1,20 +1,18 @@
 package com.delombaertdamien.go4lunch.injections;
 
-import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.delombaertdamien.go4lunch.ChatViewModel;
-import com.delombaertdamien.go4lunch.MainViewModel;
+import com.delombaertdamien.go4lunch.ui.activity.ChatViewModel;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class ChatViewModelFactory implements ViewModelProvider.Factory {
 
-    private Context context;
-
-    ChatViewModelFactory (Context context){
-        this.context = context;
+    ChatViewModelFactory (){
     }
 
     @Override

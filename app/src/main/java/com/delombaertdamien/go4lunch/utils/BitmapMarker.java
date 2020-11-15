@@ -12,6 +12,10 @@ import com.delombaertdamien.go4lunch.R;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
+/**
+ * Create Not By Damien De Lombaert - Reference unknown
+ * 2020
+ */
 public class BitmapMarker {
 
     public static BitmapDescriptor getBitmapDescriptorFromResourceDrawable(Context context, @DrawableRes int resDrawableVector, @DrawableRes int resDrawableBackground){

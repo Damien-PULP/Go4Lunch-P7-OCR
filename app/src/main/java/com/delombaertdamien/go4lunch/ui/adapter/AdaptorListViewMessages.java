@@ -26,18 +26,23 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class AdaptorListViewMessages extends FirestoreRecyclerAdapter<Message, AdaptorListViewMessages.viewHolderMessage> {
-
-    public interface Listener {
-        void onDataSetChanged ();
-    }
 
     private final Users currentUserID;
     private final Users speakerUser;
 
-    private Listener callback;
+    private final Listener callback;
 
-    private View rootView;
+    private final View rootView;
+
+
+    public interface Listener {
+        void onDataSetChanged ();
+    }
 
     public AdaptorListViewMessages(@NonNull FirestoreRecyclerOptions<Message> options, Users currentUserID, Users speakerUser, Listener callback, View root) {
         super(options);
@@ -48,36 +53,33 @@ public class AdaptorListViewMessages extends FirestoreRecyclerAdapter<Message, A
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull viewHolderMessage holder, int position, @NonNull Message model) {
-        holder.bind(model, currentUserID, speakerUser);
-    }
-
-    @NonNull
-    @Override
     public viewHolderMessage onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new viewHolderMessage(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false), rootView);
     }
-
+    @Override
+    protected void onBindViewHolder(viewHolderMessage holder, int position, @NonNull Message model) {
+        holder.bind(model, currentUserID, speakerUser);
+    }
     @Override
     public void onDataChanged() {
         super.onDataChanged();
         callback.onDataSetChanged();
     }
 
-    public class viewHolderMessage extends RecyclerView.ViewHolder{
 
-        private RelativeLayout rootView;
-        private RelativeLayout messagesContainer;
-        private LinearLayout profileContainer;
-        private ImageView iconSender;
-        private ImageView iconSpeaker;
-        private CardView item;
-        private TextView messageText;
-        private TextView dateCreateMessageText;
+    public static class viewHolderMessage extends RecyclerView.ViewHolder{
+
+        private final RelativeLayout rootView;
+        private final RelativeLayout messagesContainer;
+        private final LinearLayout profileContainer;
+        private final ImageView iconSender;
+        private final ImageView iconSpeaker;
+        private final CardView item;
+        private final TextView messageText;
+        private final TextView dateCreateMessageText;
 
         public viewHolderMessage(@NonNull View itemView, View root) {
             super(itemView);
-
             rootView = root.findViewById(R.id.fragment_chat_messages_relative_layout);
             messagesContainer = itemView.findViewById(R.id.fragment_chat_messages_messages_container);
             profileContainer = itemView.findViewById(R.id.fragment_chat_messages_container_profile);
@@ -90,15 +92,15 @@ public class AdaptorListViewMessages extends FirestoreRecyclerAdapter<Message, A
 
         public void bind (Message message, Users currentUser, Users speakerUser){
 
-            Boolean isSender;
+            boolean isSender;
             messageText.setText(message.getMessage());
             dateCreateMessageText.setText(convertDateToHour(message.getDateCreate()));
             if(!currentUser.getUserId().equals(message.getUserID())){
                 item.setCardBackgroundColor(itemView.getResources().getColor(R.color.colorBlank));
                 messageText.setTextColor(Color.BLACK);
-                if(currentUser.getUrlPicture() != null){
+                if(speakerUser.getUrlPicture() != null){
                     Glide.with(rootView)
-                            .load(currentUser.getUrlPicture())
+                            .load(speakerUser.getUrlPicture())
                             .apply(RequestOptions.circleCropTransform())
                             .into(iconSender);
                     iconSpeaker.setVisibility(View.GONE);
@@ -108,9 +110,9 @@ public class AdaptorListViewMessages extends FirestoreRecyclerAdapter<Message, A
             }else{
                 item.setCardBackgroundColor(itemView.getResources().getColor(R.color.colorAccent));
                 messageText.setTextColor(Color.WHITE);
-                if(speakerUser.getUrlPicture() != null){
+                if(currentUser.getUrlPicture() != null){
                     Glide.with(rootView)
-                            .load(speakerUser.getUrlPicture())
+                            .load(currentUser.getUrlPicture())
                             .apply(RequestOptions.circleCropTransform())
                             .into(iconSpeaker);
                     iconSender.setVisibility(View.GONE);
@@ -121,9 +123,7 @@ public class AdaptorListViewMessages extends FirestoreRecyclerAdapter<Message, A
 
             this.updateDesignDependingUser(isSender);
         }
-
         private void updateDesignDependingUser(Boolean isSender){
-
             // PROFILE CONTAINER
             RelativeLayout.LayoutParams paramsLayoutHeader = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             paramsLayoutHeader.addRule(isSender ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_PARENT_LEFT);
@@ -138,14 +138,14 @@ public class AdaptorListViewMessages extends FirestoreRecyclerAdapter<Message, A
             RelativeLayout.LayoutParams paramsImageView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             paramsImageView.addRule(isSender ? RelativeLayout.ALIGN_RIGHT : RelativeLayout.ALIGN_LEFT, R.id.fragment_chat_messages_messages_container);
             this.item.setLayoutParams(paramsImageView);
-
-
-
             this.rootView.requestLayout();
         }
+
         private String convertDateToHour(Date date){
             DateFormat dfTime = new SimpleDateFormat("HH:mm");
             return dfTime.format(date);
         }
+
     }
+
 }

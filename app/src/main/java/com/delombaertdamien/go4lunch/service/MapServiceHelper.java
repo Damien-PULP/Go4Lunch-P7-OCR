@@ -11,6 +11,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class MapServiceHelper implements MapService {
 
     @Override
@@ -24,11 +28,8 @@ public class MapServiceHelper implements MapService {
         }else{
             markerOptions.icon(BitmapMarker.getBitmapDescriptorFromResourceDrawable(context, R.drawable.ic_baseline_restaurant_24, R.drawable.ic_location_ping_orange));
         }
-        //googleMap.clear();
-        //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
         googleMap.addMarker(markerOptions);
     }
-
     @Override
     public void zoomInOnAPlace(GoogleMap googleMap,LatLng position, int v) {
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, v));

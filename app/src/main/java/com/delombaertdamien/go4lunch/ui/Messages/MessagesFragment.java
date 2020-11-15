@@ -1,10 +1,13 @@
 package com.delombaertdamien.go4lunch.ui.Messages;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.delombaertdamien.go4lunch.ChatActivity;
-import com.delombaertdamien.go4lunch.ChatViewModel;
+import com.delombaertdamien.go4lunch.ui.activity.ChatActivity;
+import com.delombaertdamien.go4lunch.ui.activity.ChatViewModel;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.Message;
 import com.delombaertdamien.go4lunch.models.Users;
@@ -30,67 +33,50 @@ import com.google.firebase.firestore.Query;
 
 import java.util.Date;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class MessagesFragment extends Fragment implements AdaptorListViewMessages.Listener, FirestoreCall.CallbackFirestoreUsersOfDiscussion {
 
+    // UI
     private ImageView iconToolbar;
     private TextView nameToolbar;
 
     private LinearLayout noMessageLayout;
     private RecyclerView recyclerView;
     private TextInputLayout textInputSender;
-
+    // ADAPTER
     private AdaptorListViewMessages adapter;
-
+    // USER OF THIS DISCUSSION
     private Users speakerUser;
     private Users currentUser;
-
-    private String speakerUserID;
+    // ID DISCUSSION
     private String currentUserID;
     private String currentChatID;
-
+    // VIEW MODEL
     private ChatViewModel chatViewModel;
-
+    // VIEW
     private View root;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_chat_messages, container, false);
 
-        this.configureViewModel();
-        this.getUsersOfDiscussion();
-        //this.init();
-        this.configureUI();
+        configureViewModel();
+        configureUI();
+        getUsersOfDiscussion();
         return root;
     }
 
+    // Configuring the view model to using
     private void configureViewModel() {
         this.chatViewModel = ((ChatActivity) getActivity()).getViewModel();
     }
-
-    private void configureUI() {
-
-        this.textInputSender = root.findViewById(R.id.fragment_chat_messages_text_input);
-        this.noMessageLayout = root.findViewById(R.id.fragment_chat_messages_no_messages);
-        this.noMessageLayout.setVisibility(View.VISIBLE);
-        this.iconToolbar = root.findViewById(R.id.fragment_chat_messages_toolbar_icon);
-        this.nameToolbar = root.findViewById(R.id.fragment_chat_messages_toolbar_name);
-        recyclerView = root.findViewById(R.id.fragment_chat_messages_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-    }
-    private void configureToolbar() {
-        if(speakerUser.getUrlPicture() != null){
-            Glide.with(getContext())
-                    .load(speakerUser.getUrlPicture())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(iconToolbar);
-        }
-        nameToolbar.setText(speakerUser.getUsername());
-    }
-
+    // Get users of this discussion
     private void getUsersOfDiscussion() {
         currentUserID = chatViewModel.getCurrentUser();
-        speakerUserID = chatViewModel.getSpeakerUser();
+        String speakerUserID = chatViewModel.getSpeakerUser();
 
         if(currentUserID.compareTo(speakerUserID) > 0){
             //CurrentUser is first
@@ -102,6 +88,32 @@ public class MessagesFragment extends Fragment implements AdaptorListViewMessage
 
         FirestoreCall.getUsersOfDiscussionByID(this, currentUserID, speakerUserID);
     }
+    // Init UI
+    private void configureUI() {
+
+        this.textInputSender = root.findViewById(R.id.fragment_chat_messages_text_input);
+        this.noMessageLayout = root.findViewById(R.id.fragment_chat_messages_no_messages);
+        this.noMessageLayout.setVisibility(View.VISIBLE);
+        this.iconToolbar = root.findViewById(R.id.fragment_chat_messages_toolbar_icon);
+        this.nameToolbar = root.findViewById(R.id.fragment_chat_messages_toolbar_name);
+        recyclerView = root.findViewById(R.id.fragment_chat_messages_recycler_view);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(manager);
+
+    }
+
+    // Configure information discussion into toolbar
+    private void configureToolbar() {
+        if(speakerUser.getUrlPicture() != null){
+            Glide.with(getContext())
+                    .load(speakerUser.getUrlPicture())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(iconToolbar);
+        }
+        nameToolbar.setText(speakerUser.getUsername());
+    }
+
+    // Set UI with information of discussion
     private void setDiscussions(){
         adapter = new AdaptorListViewMessages(generateOptionsForAdapter(MessageHelper.getAllMessagesForChat(currentChatID)), currentUser, speakerUser, this, root);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -111,7 +123,7 @@ public class MessagesFragment extends Fragment implements AdaptorListViewMessage
             }
         });
         recyclerView.setAdapter(adapter);
-
+        recyclerView.scrollToPosition(adapter.getItemCount());
         this.textInputSender.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,12 +141,15 @@ public class MessagesFragment extends Fragment implements AdaptorListViewMessage
                     MessageHelper.createMessageForChat(textInputSender.getEditText().getText().toString(), date, currentChatID, currentUserID, nameUser1, idUser1, urlIcon1, nameUser2, idUser2, urlIcon2);
                     Log.d("MessageFragment", "size" + adapter.getItemCount());
                     textInputSender.getEditText().setText("");
+                    hideKeyboardFrom(getActivity(), getView());
                 }
             }
         });
 
         this.onDataSetChanged();
     }
+
+    // Configure data of adapter discussion
     private FirestoreRecyclerOptions<Message> generateOptionsForAdapter(Query query){
         return new FirestoreRecyclerOptions.Builder<Message>()
                 .setQuery(query, Message.class)
@@ -145,8 +160,10 @@ public class MessagesFragment extends Fragment implements AdaptorListViewMessage
     @Override
     public void onDataSetChanged() {
         noMessageLayout.setVisibility(this.adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        recyclerView.scrollToPosition(adapter.getItemCount());
     }
-    // ----------------- GET USERS -----------------//
+
+    // Response of Method 'getUsersOfDiscussion' - call 'setDiscussions'
     @Override
     public void onSuccessGetUsersOfTheDiscussion(Users uid1, Users uid2) {
         if(currentUserID.equals(uid1.getUserId())){
@@ -159,9 +176,14 @@ public class MessagesFragment extends Fragment implements AdaptorListViewMessage
         this.configureToolbar();
         setDiscussions();
     }
-
     @Override
     public void onFailureGetUsersOfTheDiscussion(Exception e) {
         Log.e("MessagesFragment",  "Error : " + e.getMessage());
+    }
+
+    // Method to hide keyboard
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

@@ -2,6 +2,10 @@ package com.delombaertdamien.go4lunch.models;
 
 import java.util.Date;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class Message {
 
     private String message;

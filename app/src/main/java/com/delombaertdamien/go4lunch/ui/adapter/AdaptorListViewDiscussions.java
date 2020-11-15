@@ -14,50 +14,52 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.delombaertdamien.go4lunch.ChatActivity;
+import com.delombaertdamien.go4lunch.ui.activity.ChatActivity;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.Discussion;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class AdaptorListViewDiscussions  extends RecyclerView.Adapter<AdaptorListViewDiscussions.viewHolderDiscussion>{
-
 
     private List<Discussion> discussions = new ArrayList<>();
     private String currentID = null;
 
-    @NonNull
+
     @Override
-    public viewHolderDiscussion onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public viewHolderDiscussion onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_discussion, parent, false);
         return new viewHolderDiscussion(view);
     }
-
     @Override
-    public void onBindViewHolder(@NonNull viewHolderDiscussion holder, int position) {
+    public void onBindViewHolder(viewHolderDiscussion holder, int position) {
         holder.bind(discussions.get(position), currentID);
     }
-
     @Override
     public int getItemCount() {
         return discussions.size();
     }
-
+    // To update data of this adapter
     public void updateData (List<Discussion> discussions, String currentID){
         this.discussions = discussions;
         this.currentID = currentID;
         notifyDataSetChanged();
     }
 
-    protected class viewHolderDiscussion extends RecyclerView.ViewHolder {
 
-        private ImageView icon;
-        private TextView nameSpeaker;
-        private TextView lastMessage;
-        private ConstraintLayout item;
+    protected static class viewHolderDiscussion extends RecyclerView.ViewHolder {
+
+        private final ImageView icon;
+        private final TextView nameSpeaker;
+        private final TextView lastMessage;
+        private final ConstraintLayout item;
 
         public final String EXTRA_ID_USER = "UserIDForChat";
 
@@ -91,7 +93,7 @@ public class AdaptorListViewDiscussions  extends RecyclerView.Adapter<AdaptorLis
                         .into(icon);
             }
             nameSpeaker.setText(name);
-            //lastMessage.setText(discussion);
+            lastMessage.setText(discussion.getLastMessage());
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -101,5 +103,7 @@ public class AdaptorListViewDiscussions  extends RecyclerView.Adapter<AdaptorLis
                 }
             });
         }
+
     }
+
 }

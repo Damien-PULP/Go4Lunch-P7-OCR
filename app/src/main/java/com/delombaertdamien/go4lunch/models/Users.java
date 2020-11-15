@@ -7,12 +7,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
 public class Users {
 
     //USER INFORMATION
     private String userId;
     private String username;
     @Nullable private String urlPicture;
+    //TOKEN
+    private String token;
     //PLACE INFORMATION
     @Nullable private String lunchPlaceID;
     @Nullable String dateLunchPlace;
@@ -21,10 +27,11 @@ public class Users {
     public Users (){
 
     }
-    public Users(String userId, String username, @Nullable String urlPicture, @Nullable String lunchPlaceID, @Nullable String dateLunchPlace) {
+    public Users(String userId, String username, @Nullable String urlPicture, String token, @Nullable String lunchPlaceID, @Nullable String dateLunchPlace) {
         this.userId = userId;
         this.username = username;
         this.urlPicture = urlPicture;
+        this.token = token;
         this.lunchPlaceID = lunchPlaceID;
         this.dateLunchPlace = dateLunchPlace;
     }
@@ -82,6 +89,7 @@ public class Users {
             return null;
         }
     }
+    public String getToken (){ return token; }
     //SETTER
     public void setUserId(String userId) {
         this.userId = userId;
@@ -96,5 +104,6 @@ public class Users {
         this.lunchPlaceID = lunchPlaceID;
     }
     public void setDateLunchPlace(@Nullable String dateLunchPlace){ this.dateLunchPlace = dateLunchPlace; }
+    public void setToken (String token){ this.token = token; }
 
 }

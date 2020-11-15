@@ -1,6 +1,6 @@
 package com.delombaertdamien.go4lunch.ui.MapView;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,14 +22,15 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.delombaertdamien.go4lunch.BuildConfig;
 import com.delombaertdamien.go4lunch.DI.DI;
-import com.delombaertdamien.go4lunch.MainActivity;
-import com.delombaertdamien.go4lunch.MainViewModel;
+import com.delombaertdamien.go4lunch.ui.activity.MainActivity;
+import com.delombaertdamien.go4lunch.ui.activity.MainViewModel;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.injections.InjectionMain;
 import com.delombaertdamien.go4lunch.injections.MainViewModelFactory;
-import com.delombaertdamien.go4lunch.models.POJO.Result;
-import com.delombaertdamien.go4lunch.models.POJO.ResultsPlaces;
+import com.delombaertdamien.go4lunch.models.POJO.Places.Result;
+import com.delombaertdamien.go4lunch.models.POJO.Places.ResultsPlaces;
 import com.delombaertdamien.go4lunch.service.MapService;
 import com.delombaertdamien.go4lunch.utils.PlacesCall;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,7 +40,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -50,60 +50,66 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class MapViewFragment extends Fragment implements PlacesCall.Callbacks, GoogleMap.OnMarkerClickListener {
+/**
+ * Create By Damien De Lombaert
+ * 2020
+ */
+public class MapViewFragment extends Fragment implements PlacesCall.CallbacksFetchNearbyPlace {
 
-    //UI
-    private FloatingActionButton mFab;
-
+    //MAPS
     private GoogleMap mMap;
-    private  PlacesClient placesClient;
-
     private static final int ACCESS_LOCATION_REQUEST_CODE = 1001;
     FusedLocationProviderClient fusedLocationProviderClient;
-
-    //API SERVICE
     private MapService mapService;
+    private final String API_KEY_PLACE = BuildConfig.ApiKey;
     //VIEW MODEL
     private MainViewModel viewModel;
-
+    //PROGRESS DIALOG
     private ProgressDialog progressDialog;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View root = inflater.inflate(R.layout.fragment_map_view, container, false);
+
         configureToolbar(root);
         configureViewModel();
         init();
-        initPlaces();
         initMaps();
         configureUI(root);
         return root;
     }
 
+    // Configure information into toolbar
+    private void configureToolbar(View root) {
+        MainActivity activity = ((MainActivity) root.getContext());
+        activity.getSupportActionBar().setTitle(R.string.main_activity_title);
+    }
+    // Configuring the view model to using
+    private void configureViewModel() {
+        MainViewModelFactory mMainViewModelFactory = InjectionMain.provideViewModelFactory(getActivity());
+        this.viewModel = new ViewModelProvider(this, mMainViewModelFactory).get(MainViewModel.class);
+    }
+    // Init Place
     private void init() {
         mapService = DI.getMapApiService();
         // SHOW DIALOG LOADING
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
+        // Place init
+        Places.initialize(getActivity().getApplicationContext(), API_KEY_PLACE);
+        PlacesClient placesClient = Places.createClient(getContext());
     }
+    // Init Place and show map into fragment
     private void initMaps() {
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         SupportMapFragment mapsFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_view_fragment);
         mapsFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(final GoogleMap googleMap) {
-
                 mMap = googleMap;
 
                 try {
-                    // Customise the styling of the base map using a JSON object defined
-                    // in a raw resource file.
-                    boolean success = googleMap.setMapStyle(
-                            MapStyleOptions.loadRawResourceStyle(
-                                    getActivity(), R.raw.map_style));
-
+                    boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style));
                     if (!success) {
                         Log.e("MapFragment", "Style parsing failed.");
                     }
@@ -117,38 +123,21 @@ public class MapViewFragment extends Fragment implements PlacesCall.Callbacks, G
                         mapService.addMarker(mMap, latLng, "restaurant", getActivity(), true);
                     }
                 });
+
                 if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    enabledUserLocation();
                     zoomToUserLocation();
                 } else {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), ACCESS_FINE_LOCATION)) {
                         ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE);
-                    } else {
-
                     }
                 }
             }
         });
 
     }
-    private void initPlaces() {
-        //init SDK
-        // TODO - CHANGE LOCATION API KEY
-        Places.initialize(getActivity().getApplicationContext(), String.valueOf(R.string.apiKeyGooglePlace));
-        placesClient = Places.createClient(getContext());
-
-    }
-
-    private void configureViewModel() {
-        MainViewModelFactory mMainViewModelFactory = InjectionMain.provideViewModelFactory(getActivity());
-        this.viewModel = new ViewModelProvider(this, mMainViewModelFactory).get(MainViewModel.class);
-    }
-    private void configureToolbar(View root) {
-        MainActivity activity = ((MainActivity) root.getContext());
-        activity.getSupportActionBar().setTitle(R.string.main_activity_title);
-    }
-    private void configureUI(View root){
-        mFab = root.findViewById(R.id.fragment_map_view_fab_my_location);
+    // Configure Fab
+    private void configureUI(View root) {
+        FloatingActionButton mFab = root.findViewById(R.id.fragment_map_view_fab_my_location);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,55 +146,76 @@ public class MapViewFragment extends Fragment implements PlacesCall.Callbacks, G
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == ACCESS_LOCATION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                enabledUserLocation();
-                zoomToUserLocation();
-            } else {
-                Log.e("MapViewFragment", "error permission denied");
-            }
-        }
+    // REQUEST API WITH RETROFIT
+    private void callAPI(String location) {
+        viewModel.getNearbyPlaces(this, location);
     }
-
-    //TODO WARNING PERMISSION & ERROR SDK
     private void zoomToUserLocation() {
-
-        if(statusCheck()) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        if (statusCheck()) {
             Task<Location> locationTask = viewModel.getUserLocation();
-            mMap.setOnMarkerClickListener(this);
             locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    if(location != null) {
+                    if (location != null) {
                         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         mapService.zoomInOnAPlace(mMap, latLng, 15);
-                       // callAPI(location.getLatitude() + ","+ location.getLongitude());
-
+                        callAPI(location.getLatitude() + "," + location.getLongitude());
                     }
-                    //TODO DELETE WHEN API IS ENABLED
-                    progressDialog.dismiss();
-
+                    //progressDialog.dismiss();
                 }
             });
-        }else{
+        } else {
             buildAlertMessageNoGps();
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private void enabledUserLocation() {
+    // Response of CallApi - ResultPlace
+    @Override
+    public void onResponse(ResultsPlaces places) {
+        if(places.getResults()!= null) {
+            mMap.clear();
+            List<Result> candidatesPlaces = places.getResults();
+            for(int i = 0; i < candidatesPlaces.size(); i++){
+                LatLng latLng = new LatLng(candidatesPlaces.get(i).getGeometry().getLocation().getLat(), candidatesPlaces.get(i).getGeometry().getLocation().getLng());
+                mapService.addMarker(mMap,latLng, candidatesPlaces.get(i).getName(), getActivity(), true);
+            }
+        }
+        progressDialog.dismiss();
 
-        mMap.setMyLocationEnabled(true);
+    }
+    @Override
+    public void onFailure(Throwable t) {
+        Log.e("MapsViewFragment", "fail bro" + t.getMessage());
     }
 
+    //Check Permissions
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == ACCESS_LOCATION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                zoomToUserLocation();
+            } else {
+                getActivity().finish();
+            }
+        }
+    }
     public boolean statusCheck() {
-
         final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
+    // Show request enabled alert no GPS
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.alert_message_no_gps)
@@ -224,39 +234,4 @@ public class MapViewFragment extends Fragment implements PlacesCall.Callbacks, G
         alert.show();
     }
 
-    // REQUEST API WITH RETROFIT
-    private void callAPI (String location){
-        viewModel.getNearbyPlaces(this, location);
-    }
-    @Override
-    public void onResponse(ResultsPlaces places) {
-        if(places.getResults()!= null) {
-            mMap.clear();
-            List<Result> candidatesPlaces = places.getResults();
-            for(int i = 0; i < candidatesPlaces.size(); i++){
-                Log.d("MapsViewFragment", "Name of restaurant : " + candidatesPlaces.get(i).getName());
-                LatLng latLng = new LatLng(candidatesPlaces.get(i).getGeometry().getLocation().getLat(), candidatesPlaces.get(i).getGeometry().getLocation().getLng());
-                mapService.addMarker(mMap,latLng, candidatesPlaces.get(i).getName(), getActivity(), true);
-            }
-            // DISMISS DIALOG LOADING
-            progressDialog.dismiss();
-            Log.d("MapsViewFragment", "Status of candidates "+ places.getStatus());
-            Log.d("MapsViewFragment", "The size of list is "+ candidatesPlaces.size());
-        }else{
-            Log.d("MapsViewFragment", "Status of candidates "+ places.getStatus());
-            Log.d("MapsViewFragment", "The list of places is null");
-        }
-
-    }
-    @Override
-    public void onFailure() {
-        Log.d("MapsViewFragment", "fail bro");
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Log.d("MapsViewFragment", "The restaurant is : " + marker.getTitle());
-
-        return true;
-    }
 }
