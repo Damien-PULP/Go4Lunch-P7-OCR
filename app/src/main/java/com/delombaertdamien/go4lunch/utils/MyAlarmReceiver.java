@@ -6,17 +6,14 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.delombaertdamien.go4lunch.BuildConfig;
 import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.models.notification.Data;
 import com.delombaertdamien.go4lunch.models.notification.MyResponse;
 import com.delombaertdamien.go4lunch.models.notification.Notification;
 import com.delombaertdamien.go4lunch.service.MessageAPIService;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.jetbrains.annotations.NotNull;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -32,8 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MyAlarmReceiver extends BroadcastReceiver implements FirestoreCall.CallbackFirestoreUser {
 
-    private final String API_KEY_NOTIFY = BuildConfig.ApiKeyN;
-    private MessageAPIService mApiServiceMessaging;
+    private static final String API_KEY_NOTIFY = BuildConfig.ApiKeyN;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -41,7 +37,7 @@ public class MyAlarmReceiver extends BroadcastReceiver implements FirestoreCall.
         FirestoreCall.getCurrentUser(this);
         Log.d("ALARM", "NOTIFIY");
     }
-    private void sendNotification (Users user){
+    public static void sendNotification (Users user){
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -52,7 +48,7 @@ public class MyAlarmReceiver extends BroadcastReceiver implements FirestoreCall.
                 .client(client)
                 .build();
 
-        mApiServiceMessaging = retrofit.create(MessageAPIService.class);
+        MessageAPIService mApiServiceMessaging = retrofit.create(MessageAPIService.class);
 
         Log.d("MainActivity", "Send notification");
 
@@ -60,7 +56,17 @@ public class MyAlarmReceiver extends BroadcastReceiver implements FirestoreCall.
         Data data = new Data("Hello");
         Notification notification = new Notification(user.getToken(), data);
 
-        mApiServiceMessaging.sendNotification(API_KEY_NOTIFY,notification);
+        mApiServiceMessaging.sendNotification(notification).enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<MyResponse> call, @NotNull Response<MyResponse> response) {
+                Log.d("AlarmReceiver", response.message());
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<MyResponse> call, @NotNull Throwable t) {
+                Log.e("AlarmReceiver", t.getMessage());
+            }
+        });
     }
 
     @Override

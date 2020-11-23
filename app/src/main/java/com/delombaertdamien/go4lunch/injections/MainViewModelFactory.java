@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.delombaertdamien.go4lunch.ui.activity.MainViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Create By Damien De Lombaert
  * 2020
@@ -18,6 +20,7 @@ public class MainViewModelFactory implements ViewModelProvider.Factory {
     this.context = context;
     }
 
+    @NotNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if(modelClass.isAssignableFrom(MainViewModel.class)){

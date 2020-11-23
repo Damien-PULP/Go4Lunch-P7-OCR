@@ -9,7 +9,6 @@
     tools:context=".ui.activity.LogActivity">
 
     <ProgressBar
-        android:id="@+id/log_activity_progress_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

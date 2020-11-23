@@ -20,6 +20,8 @@ import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.Favorite;
 import com.delombaertdamien.go4lunch.service.FavoriteHelper;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class AdaptorListViewFavorites extends RecyclerView.Adapter<AdaptorListVi
         this.uid = uid;
     }
 
+    @NotNull
     @Override
     public viewHolderFavorite onCreateViewHolder( ViewGroup parent, int viewType) {
         Context context = parent.getContext();

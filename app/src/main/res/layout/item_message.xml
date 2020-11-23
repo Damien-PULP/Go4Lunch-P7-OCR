@@ -10,7 +10,7 @@
         android:id="@+id/fragment_chat_messages_container_profile"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:orientation="horizontal">
 
         <ImageView

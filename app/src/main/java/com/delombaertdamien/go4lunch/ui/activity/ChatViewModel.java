@@ -20,7 +20,6 @@ public class ChatViewModel extends ViewModel {
 
     public interface ListenersStateRequestGetUser {
         void onSuccessGetUser(Users user);
-        void onFailedGetUser();
     }
 
     // Get current user
@@ -43,7 +42,7 @@ public class ChatViewModel extends ViewModel {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                callback.onFailedGetUser();
+
             }
         });
     }

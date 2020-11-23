@@ -2,7 +2,6 @@ package com.delombaertdamien.go4lunch.service;
 
 import com.delombaertdamien.go4lunch.models.Discussion;
 import com.delombaertdamien.go4lunch.models.Message;
-import com.delombaertdamien.go4lunch.models.Users;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;

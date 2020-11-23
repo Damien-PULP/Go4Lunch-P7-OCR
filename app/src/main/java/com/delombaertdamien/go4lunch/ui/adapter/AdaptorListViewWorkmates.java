@@ -20,6 +20,8 @@ import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.utils.PlacesCall;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class AdaptorListViewWorkmates extends RecyclerView.Adapter<AdaptorListVi
         this.isUsingInWorkmatesFragment = isUsingInWorkmatesFragment;
     }
 
+    @NotNull
     @Override
     public WorkmatesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();

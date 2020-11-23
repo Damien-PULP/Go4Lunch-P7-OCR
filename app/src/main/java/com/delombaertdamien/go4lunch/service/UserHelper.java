@@ -1,15 +1,10 @@
 package com.delombaertdamien.go4lunch.service;
 
-import androidx.annotation.Nullable;
-
-import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.models.UsersWithoutPlaceId;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
@@ -22,13 +17,15 @@ import java.util.Date;
  */
 public class UserHelper {
 
-    private static final String COLLECTION_NAME = "users";
+    private static final String COLLECTION_NAME = "users_in_app";
 
     // GET ALL
     public static CollectionReference getUsersCollection(){return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);}
     //CREATE
     public static Task<Void> createUser(String uid, String username, String urlPicture, String token){
         UsersWithoutPlaceId usersWithoutPlaceId = new UsersWithoutPlaceId(uid,username, urlPicture, token);
+       //Date date = new Date();
+        //Users users = new Users(uid, username, urlPicture, token, null, date);
         return UserHelper.getUsersCollection().document(uid).set(usersWithoutPlaceId, SetOptions.merge());
     }
     //GET
@@ -48,7 +45,7 @@ public class UserHelper {
         return UserHelper.getUsersCollection().whereEqualTo("lunchPlaceID", placeID).get();
     }
     //UPDATE
-    public static Task<Void> updateLunchPlace(String uid,String placeId, String timestampLunch){
+    public static Task<Void> updateLunchPlace(String uid,String placeId, Date timestampLunch){
         return UserHelper.getUsersCollection().document(uid).update("lunchPlaceID", placeId, "dateLunchPlace", timestampLunch);
     }
     //UPDATE

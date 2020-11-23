@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +20,8 @@ import com.delombaertdamien.go4lunch.models.Message;
 import com.delombaertdamien.go4lunch.models.Users;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,6 +53,7 @@ public class AdaptorListViewMessages extends FirestoreRecyclerAdapter<Message, A
         this.rootView = root;
     }
 
+    @NotNull
     @Override
     public viewHolderMessage onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new viewHolderMessage(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false), rootView);

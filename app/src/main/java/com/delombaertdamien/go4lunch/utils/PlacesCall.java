@@ -9,6 +9,8 @@ import com.delombaertdamien.go4lunch.models.POJO.Places.ResultsPlaces;
 import com.delombaertdamien.go4lunch.models.POJO.autocompleteByPlace.ResultAutoCompletePlace;
 import com.delombaertdamien.go4lunch.service.PlacesService;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.ref.WeakReference;
 
 import retrofit2.Call;
@@ -37,21 +39,21 @@ public class PlacesCall {
     }
     /** --- METHOD --- */
     public static void fetchNearbyPlaces (CallbacksFetchNearbyPlace callbacksFetchNearbyPlace, String location){
-        final WeakReference<CallbacksFetchNearbyPlace> cbRef = new WeakReference<CallbacksFetchNearbyPlace>(callbacksFetchNearbyPlace);
+        final WeakReference<CallbacksFetchNearbyPlace> cbRef = new WeakReference<>(callbacksFetchNearbyPlace);
 
         PlacesService service = PlacesService.retrofit.create(PlacesService.class);
         Call<ResultsPlaces> call = service.getPlaces(location, "restaurant", "1000", API_KEY);
 
         call.enqueue(new Callback<ResultsPlaces>() {
             @Override
-            public void onResponse(Call<ResultsPlaces> call, Response<ResultsPlaces> response) {
+            public void onResponse(@NotNull Call<ResultsPlaces> call, @NotNull Response<ResultsPlaces> response) {
                 if(cbRef.get() != null){
                     cbRef.get().onResponse(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<ResultsPlaces> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResultsPlaces> call, @NotNull Throwable t) {
                 if (cbRef.get() != null){
                     cbRef.get().onFailure(t);
                 }
@@ -64,12 +66,12 @@ public class PlacesCall {
          Call<ResultDetails> call = service.getAPlace(placeID, API_KEY);
          call.enqueue(new Callback<ResultDetails>() {
              @Override
-             public void onResponse(Call<ResultDetails> call, Response<ResultDetails> response) {
+             public void onResponse(@NotNull Call<ResultDetails> call, @NotNull Response<ResultDetails> response) {
                  callbacks.onResponseGetDetailOfPlace(response.body());
              }
 
              @Override
-             public void onFailure(Call<ResultDetails> call, Throwable t) {
+             public void onFailure(@NotNull Call<ResultDetails> call, @NotNull Throwable t) {
                 callbacks.onFailureGetDetailOfPlace(t);
              }
          });
@@ -79,12 +81,12 @@ public class PlacesCall {
         Call<ResultAutoCompletePlace> call = service.getValueAutoCompleteByRequest(input, "establishment",API_KEY);
         call.enqueue(new Callback<ResultAutoCompletePlace>() {
             @Override
-            public void onResponse(Call<ResultAutoCompletePlace> call, Response<ResultAutoCompletePlace> response) {
+            public void onResponse(@NotNull Call<ResultAutoCompletePlace> call, @NotNull Response<ResultAutoCompletePlace> response) {
                 callback.onResponseGetAllPredictionsOfSearchPlace(response.body(), input);
             }
 
             @Override
-            public void onFailure(Call<ResultAutoCompletePlace> call, Throwable t) {
+            public void onFailure(@NotNull Call<ResultAutoCompletePlace> call, @NotNull Throwable t) {
                 callback.onFailureGetAllPredictionsOfSearchPlace(t);
             }
         });

@@ -24,8 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.lang.ref.WeakReference;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
 /**
  * Create By Damien De Lombaert
  * 2020

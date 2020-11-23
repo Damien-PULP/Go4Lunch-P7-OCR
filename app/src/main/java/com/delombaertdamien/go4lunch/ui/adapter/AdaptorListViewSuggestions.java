@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.POJO.autocompleteByPlace.Prediction;
 import com.delombaertdamien.go4lunch.ui.activity.DetailsActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class AdaptorListViewSuggestions extends RecyclerView.Adapter<AdaptorList
     String input = "";
 
 
+    @NotNull
     @Override
     public viewHolderSuggestion onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -58,8 +60,8 @@ public class AdaptorListViewSuggestions extends RecyclerView.Adapter<AdaptorList
 
     protected static class viewHolderSuggestion extends RecyclerView.ViewHolder {
 
-        private LinearLayout item;
-        private TextView textSuggestion;
+        private final LinearLayout item;
+        private final TextView textSuggestion;
 
         private final String EXTRA_NAME = "placeID";
 

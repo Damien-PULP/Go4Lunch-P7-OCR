@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Sender {
 
-    public String data;
-    public List<String> registration_ids;
+    public final String data;
+    public final List<String> registration_ids;
 
     public Sender(String data, List<String> registration_ids) {
         this.data = data;

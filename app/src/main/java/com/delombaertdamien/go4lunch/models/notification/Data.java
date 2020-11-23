@@ -1,6 +1,8 @@
 package com.delombaertdamien.go4lunch.models.notification;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 public class Data implements Serializable {
@@ -23,6 +25,7 @@ public class Data implements Serializable {
         this.hello = hello;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Data{" +

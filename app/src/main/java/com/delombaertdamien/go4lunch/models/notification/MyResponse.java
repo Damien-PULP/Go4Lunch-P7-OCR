@@ -1,5 +1,7 @@
 package com.delombaertdamien.go4lunch.models.notification;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -64,6 +66,7 @@ public class MyResponse implements Serializable {
         this.results = results;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "MyResponse{" +

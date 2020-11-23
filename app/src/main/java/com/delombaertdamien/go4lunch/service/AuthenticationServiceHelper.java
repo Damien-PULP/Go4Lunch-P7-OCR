@@ -6,6 +6,7 @@ import com.delombaertdamien.go4lunch.R;
 import com.firebase.ui.auth.AuthUI;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public class AuthenticationServiceHelper implements AuthenticationService {
 
     @Override
     public Intent getAuthUIOfSignWithFacebook() {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
+        List<AuthUI.IdpConfig> providers = Collections.singletonList(
                 new AuthUI.IdpConfig.FacebookBuilder()
                         .build());
 

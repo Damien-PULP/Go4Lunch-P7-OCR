@@ -85,10 +85,6 @@ public class DiscussionFragment extends Fragment implements FirestoreCall.Callba
         nameToolbar.setText(user.getUsername());
         this.getAllDiscussions();
     }
-    @Override
-    public void onFailedGetUser() {
-
-    }
 
     // Response of Method 'getAllDiscussions' && update adapter with List discussions
     @Override

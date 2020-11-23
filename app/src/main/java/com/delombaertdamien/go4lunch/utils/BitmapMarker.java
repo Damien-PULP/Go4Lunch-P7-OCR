@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 
-import com.delombaertdamien.go4lunch.R;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 

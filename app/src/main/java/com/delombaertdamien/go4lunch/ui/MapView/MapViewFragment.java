@@ -61,7 +61,6 @@ public class MapViewFragment extends Fragment implements PlacesCall.CallbacksFet
     private static final int ACCESS_LOCATION_REQUEST_CODE = 1001;
     FusedLocationProviderClient fusedLocationProviderClient;
     private MapService mapService;
-    private final String API_KEY_PLACE = BuildConfig.ApiKey;
     //VIEW MODEL
     private MainViewModel viewModel;
     //PROGRESS DIALOG
@@ -96,6 +95,7 @@ public class MapViewFragment extends Fragment implements PlacesCall.CallbacksFet
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
         // Place init
+        String API_KEY_PLACE = BuildConfig.ApiKey;
         Places.initialize(getActivity().getApplicationContext(), API_KEY_PLACE);
         PlacesClient placesClient = Places.createClient(getContext());
     }

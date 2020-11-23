@@ -18,6 +18,8 @@ import com.delombaertdamien.go4lunch.ui.activity.ChatActivity;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.Discussion;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class AdaptorListViewDiscussions  extends RecyclerView.Adapter<AdaptorLis
     private String currentID = null;
 
 
+    @NotNull
     @Override
     public viewHolderDiscussion onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();

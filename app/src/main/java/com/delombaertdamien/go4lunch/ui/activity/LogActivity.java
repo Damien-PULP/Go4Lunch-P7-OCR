@@ -36,9 +36,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 /**
  * Create By Damien De Lombaert
  * 2020
@@ -47,14 +44,9 @@ public class LogActivity extends AppCompatActivity implements FirestoreCall.Call
 
     /** --- UI --- */
     private ConstraintLayout mConstraintLayout;
-    private Button mButtonLogWithFacebook;
-    private Button mButtonLogWithGoogle;
     /** --- Authentication --- */
     private AuthenticationService authenticationService;
     private static final int RC_SIGN_IN = 123;
-    /** --- Permissions --- */
-    final private int REQUEST_CODE_ASK_PERMISSIONS_LOCATION = 123;
-    final private int REQUEST_CODE_ASK_PERMISSIONS_CALL = 124;
 
     private ProgressDialog progressDialog;
 
@@ -77,8 +69,8 @@ public class LogActivity extends AppCompatActivity implements FirestoreCall.Call
     private void setUI() {
         progressDialog = new ProgressDialog(this);
         progressDialog.dismiss();
-        mButtonLogWithFacebook = (Button) findViewById(R.id.log_with_facebook);
-        mButtonLogWithGoogle = (Button) findViewById(R.id.log_with_google);
+        Button mButtonLogWithFacebook = (Button) findViewById(R.id.log_with_facebook);
+        Button mButtonLogWithGoogle = (Button) findViewById(R.id.log_with_google);
         mConstraintLayout = (ConstraintLayout) findViewById(R.id.activity_log_constraint_layout);
 
         mButtonLogWithFacebook.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +98,7 @@ public class LogActivity extends AppCompatActivity implements FirestoreCall.Call
     // Response get current token and create user in firestore
     @Override
     public void onSuccessGetCurrentToken(String token) {
+        Log.d("LogActivity", "token: " + token);
         if (this.getCurrentUser() != null) {
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ? this.getCurrentUser().getPhotoUrl().toString() : null;
             String username = this.getCurrentUser().getDisplayName();
@@ -160,9 +153,12 @@ public class LogActivity extends AppCompatActivity implements FirestoreCall.Call
         if(!isOnline()) buildAlertMessageNoInternet();
         if (Build.VERSION.SDK_INT >= 23) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                /** --- Permissions --- */
+                int REQUEST_CODE_ASK_PERMISSIONS_LOCATION = 123;
                 requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS_LOCATION);
             }
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
+                int REQUEST_CODE_ASK_PERMISSIONS_CALL = 124;
                 requestPermissions(new String[]{android.Manifest.permission.CALL_PHONE}, REQUEST_CODE_ASK_PERMISSIONS_CALL);
             }
         }

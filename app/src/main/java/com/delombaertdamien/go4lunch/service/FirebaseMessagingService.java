@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
@@ -16,15 +15,14 @@ import androidx.core.app.NotificationCompat;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.ui.activity.LogActivity;
-import com.delombaertdamien.go4lunch.ui.activity.MainActivity;
 import com.delombaertdamien.go4lunch.utils.FirestoreCall;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.RemoteMessage;
 
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
+import java.util.List;
 
 /**
  * Create By Damien De Lombaert
@@ -34,7 +32,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NotNull RemoteMessage remoteMessage) {
         Log.d("FirebaseMessageService", "Message received");
         FirestoreCall.getAllInformationToConstructNotification(this);
     }
@@ -87,35 +85,42 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         // 7 - Show notification
         String NOTIFICATION_TAG = "FIREBASEOC";
-        int NOTIFICATION_ID = 007;
+        int NOTIFICATION_ID = 7;
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build());
 
     }
 
     @Override
     public void onSuccessGetAllInformationToConstructNotification(String name, String nameRestaurant, List<Users> usersLunchByUser) {
-        String allUsers = "";
-        if(usersLunchByUser != null) {
-            for (int i = 0; i < usersLunchByUser.size(); i++) {
-                if(!usersLunchByUser.get(i).getUsername().equals(name)) {
-                    allUsers += usersLunchByUser.get(i).getUsername();
-                    if (usersLunchByUser.size() < i - 1) {
-                        allUsers += ", ";
+        String msg;
+        if(nameRestaurant != null) {
+            StringBuilder allUsers = new StringBuilder();
+            if (usersLunchByUser != null) {
+                for (int i = 0; i < usersLunchByUser.size(); i++) {
+                    if (!usersLunchByUser.get(i).getUsername().equals(name)) {
+                        allUsers.append(usersLunchByUser.get(i).getUsername());
+                        if (usersLunchByUser.size() < i - 1) {
+                            allUsers.append(", ");
+                        }
                     }
                 }
             }
-        }
-        String  msg;
-        if(!allUsers.equals("")) {
-            msg = "Salut " + name + ", aujourd'hui tu manges au " + nameRestaurant + " avec " + allUsers;
+
+            if (!allUsers.toString().equals("")) {
+                msg = getString(R.string.notification_part_1_hey) + name + getString(R.string.notification_part_2_eating) + nameRestaurant + getString(R.string.notification_part_3_with) + allUsers;
+            } else {
+                msg = getString(R.string.notification_part_1_hey) + name + getString(R.string.notification_part_2_eating) + nameRestaurant;
+            }
+            Log.d("FirebaseMessaging", msg);
         }else{
-            msg = "Salut " + name + ", aujourd'hui tu manges au " + nameRestaurant;
+            msg = getString(R.string.notification_not_deceixded);
         }
-        Log.d("FirebaseMessaging", msg);
         showNotification(msg);
     }
     @Override
-    public void onFailureGetAllInformationToConstructNotification(Exception e) {
-        Log.e("FirebaseMessaging", e.getMessage());
+    public void onFailureGetAllInformationToConstructNotification() {
+        String msg;
+        msg = getString(R.string.notification_not_deceixded);
+        showNotification(msg);
     }
 }

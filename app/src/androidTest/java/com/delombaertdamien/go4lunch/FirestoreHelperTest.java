@@ -13,16 +13,9 @@ import com.delombaertdamien.go4lunch.service.MessageHelper;
 import com.delombaertdamien.go4lunch.service.UserHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,7 +25,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -158,9 +150,9 @@ public class FirestoreHelperTest {
                     public void onSuccess(QuerySnapshot querySnapshot) {
 
                         final String placeId = "placeID";
-                        final String lunchPlaceTime = "10/10/20";
+                        final Date date = new Date();
 
-                        UserHelper.updateLunchPlace(uid, placeId, lunchPlaceTime);
+                        UserHelper.updateLunchPlace(uid, placeId, date);
 
                         List<Users> userListAfterUpdate = new ArrayList<>();
 

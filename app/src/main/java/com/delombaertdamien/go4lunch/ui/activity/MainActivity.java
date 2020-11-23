@@ -17,7 +17,6 @@ import com.delombaertdamien.go4lunch.injections.InjectionMain;
 import com.delombaertdamien.go4lunch.injections.MainViewModelFactory;
 import com.delombaertdamien.go4lunch.models.POJO.autocompleteByPlace.ResultAutoCompletePlace;
 import com.delombaertdamien.go4lunch.models.Users;
-import com.delombaertdamien.go4lunch.service.MessageAPIService;
 import com.delombaertdamien.go4lunch.ui.adapter.AdaptorListViewSuggestions;
 import com.delombaertdamien.go4lunch.utils.ConfigureAlarmNotify;
 import com.delombaertdamien.go4lunch.utils.FirestoreCall;
@@ -48,13 +47,8 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FirestoreCall.CallbackFirestoreUser, PlacesCall.GetAllPredictionOfSearchPlace {
 
-    /** ----UI ---*/
-    private RecyclerView recyclerViewSuggestion;
     //NAV HEADER
     private DrawerLayout drawerLayout;
-    private ImageView iconProfileUser;
-    private TextView emailProfileUser;
-    private TextView nameProfileUser;
     /** -----------*/
     //VIEW MODEL
     private MainViewModel viewModel;
@@ -99,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         // --- Suggestion --- //
-        recyclerViewSuggestion = findViewById(R.id.activity_main_toolbar_recycler_view_suggestion);
+        /** ----UI ---*/
+        RecyclerView recyclerViewSuggestion = findViewById(R.id.activity_main_toolbar_recycler_view_suggestion);
         recyclerViewSuggestion.setLayoutManager(new LinearLayoutManager(this));
         adapterSuggestion = new AdaptorListViewSuggestions();
         recyclerViewSuggestion.setAdapter(adapterSuggestion);
@@ -108,9 +103,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void configureNavigationView (){
         NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         ConstraintLayout header = (ConstraintLayout) navigationView.getHeaderView(0);
-        this.iconProfileUser = (ImageView) header.findViewById(R.id.nav_icon_user);
-        this.nameProfileUser = (TextView) header.findViewById(R.id.nav_name_user);
-        this.emailProfileUser = (TextView) header.findViewById(R.id.nav_email_user);
+        ImageView iconProfileUser = (ImageView) header.findViewById(R.id.nav_icon_user);
+        TextView nameProfileUser = (TextView) header.findViewById(R.id.nav_name_user);
+        TextView emailProfileUser = (TextView) header.findViewById(R.id.nav_email_user);
         navigationView.setNavigationItemSelectedListener(this);
 
         if(viewModel.getCurrentUser() != null){

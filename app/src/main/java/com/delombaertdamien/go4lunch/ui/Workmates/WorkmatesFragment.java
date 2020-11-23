@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +17,8 @@ import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.Users;
 import com.delombaertdamien.go4lunch.ui.adapter.AdaptorListViewWorkmates;
 import com.delombaertdamien.go4lunch.utils.FirestoreCall;
+import com.delombaertdamien.go4lunch.utils.MyAlarmReceiver;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,12 +29,14 @@ import java.util.List;
  * Create By Damien De Lombaert
  * 2020
  */
-public class WorkmatesFragment extends Fragment implements FirestoreCall.CallbackFirestore {
+public class WorkmatesFragment extends Fragment implements FirestoreCall.CallbackFirestore, FirestoreCall.CallbackFirestoreUser {
 
     // ADAPTER
     private AdaptorListViewWorkmates mAdapterListView;
     // PROGRESS DIALOG
     ProgressDialog progressDialog;
+    //JUST FOR PRESENTATION
+    ExtendedFloatingActionButton eFab;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +45,13 @@ public class WorkmatesFragment extends Fragment implements FirestoreCall.Callbac
         configureToolbar(root);
         initUI(root);
         getAllUsers();
+        //JUST FOR PRESENTATION
+        getObjCurrentUser();
         return root;
+    }
+
+    private void getObjCurrentUser() {
+        FirestoreCall.getCurrentUser(this);
     }
 
     // Configure information into toolbar
@@ -57,6 +66,8 @@ public class WorkmatesFragment extends Fragment implements FirestoreCall.Callbac
         progressDialog.show();
         // Recycler view
         RecyclerView mRecyclerViewWorkmates = root.findViewById(R.id.fragment_workmates_recycler_view);
+        //JUST FOR PRESENTATION
+        eFab = root.findViewById(R.id.fragment_workmates_send_notification);
 
         mAdapterListView = new AdaptorListViewWorkmates(getActivity(), true);
         mRecyclerViewWorkmates.setAdapter(mAdapterListView);
@@ -88,5 +99,21 @@ public class WorkmatesFragment extends Fragment implements FirestoreCall.Callbac
     @Override
     public void onFailureGetUsers(Exception e) {
         Log.e("WorkmatesFragment", e.getMessage());
+    }
+
+    //JUST FOR TEST
+    @Override
+    public void onSuccessGetCurrentUser(final Users user) {
+        eFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyAlarmReceiver.sendNotification(user);
+            }
+        });
+    }
+
+    @Override
+    public void onFailureGetCurrentUser() {
+
     }
 }

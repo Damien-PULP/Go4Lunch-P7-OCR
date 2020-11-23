@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/fragment_chat_discussion_toolbar"
         style="@style/Widget.MaterialComponents.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -54,7 +53,6 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_chat_discussion_fab_add_discussion"
         android:layout_margin="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

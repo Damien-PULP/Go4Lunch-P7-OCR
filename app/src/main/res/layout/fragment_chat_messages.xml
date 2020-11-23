@@ -15,7 +15,6 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/fragment_chat_messages_toolbar"
             style="@style/Widget.MaterialComponents.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -49,7 +48,6 @@
         android:layout_above="@id/fragment_chat_messages_text_input">
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/fragment_chat_messages_scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"

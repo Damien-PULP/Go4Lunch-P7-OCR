@@ -71,7 +71,7 @@ public class DetailsActivity extends AppCompatActivity implements PlacesCall.Get
     private Boolean isCurrentUserEatHer = false;
     private Boolean isThisPlaceIsFavorite = false;
 
-    private final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YY");
+    private final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YYYY");
 
 
     @Override
@@ -163,14 +163,13 @@ public class DetailsActivity extends AppCompatActivity implements PlacesCall.Get
             public void onClick(View view) {
                 if (isCurrentUserEatHer) {
                     mFavoritesPlaceFab.setColorFilter(Color.LTGRAY);
-                    UserHelper.updateLunchPlace(getCurrentUser().getUid(), placeID, null);
+                    UserHelper.updateLunchPlace(getCurrentUser().getUid(), null, null);
                     getAllUserOfThisPlace();
                     isCurrentUserEatHer = false;
                 } else {
                     mFavoritesPlaceFab.setColorFilter(Color.GREEN);
                     Date date = new Date();
-                    String dateToString = formatDate.format(date);
-                    UserHelper.updateLunchPlace(getCurrentUser().getUid(), placeID, dateToString);
+                    UserHelper.updateLunchPlace(getCurrentUser().getUid(), placeID, date);
                     getAllUserOfThisPlace();
                     Snackbar.make(view, getResources().getString(R.string.alert_msg_today_eat) + " " + place.getName(), Snackbar.LENGTH_LONG).show();
                     isCurrentUserEatHer = true;
@@ -230,8 +229,9 @@ public class DetailsActivity extends AppCompatActivity implements PlacesCall.Get
     @Override
     public void onSuccessGetAllFavoriteOfTheUser(List<Favorite> favorites) {
         for(Favorite favorite : favorites){
-            if(favorite.getIdPlace().equals(placeID)){
+            if (favorite.getIdPlace().equals(placeID)) {
                 isThisPlaceIsFavorite = true;
+                break;
             }
         }
         updateUI();

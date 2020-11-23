@@ -7,7 +7,6 @@
     tools:context=".ui.activity.FavoriteActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/activity_favorite_appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

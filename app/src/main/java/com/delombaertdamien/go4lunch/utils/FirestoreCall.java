@@ -24,6 +24,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class FirestoreCall {
     }
     public interface CallbackGetAllInformationToConstructNotification {
         void onSuccessGetAllInformationToConstructNotification(String name, String nameRestaurant, List<Users> usersLunchByUser);
-        void onFailureGetAllInformationToConstructNotification(Exception e);
+        void onFailureGetAllInformationToConstructNotification();
     }
 
     /** --- METHOD --- */
@@ -76,7 +78,7 @@ public class FirestoreCall {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        callback.onFailureGetAllInformationToConstructNotification(e);
+                        callback.onFailureGetAllInformationToConstructNotification();
                     }
                 })
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -90,7 +92,7 @@ public class FirestoreCall {
                             Call<ResultDetails> call = service.getAPlace(user.getLunchPlaceID(), API_KEY);
                             call.enqueue(new Callback<ResultDetails>() {
                                 @Override
-                                public void onResponse(Call<ResultDetails> call, final Response<ResultDetails> response) {
+                                public void onResponse(@NotNull Call<ResultDetails> call, @NotNull final Response<ResultDetails> response) {
 
                                     final ResultDetails detailPlace = response.body();
 
@@ -118,7 +120,7 @@ public class FirestoreCall {
                                 }
 
                                 @Override
-                                public void onFailure(Call<ResultDetails> call, Throwable t) {
+                                public void onFailure(@NotNull Call<ResultDetails> call, @NotNull Throwable t) {
                                     callback.onSuccessGetAllInformationToConstructNotification(user.getUsername(), null, null);
                                     Log.e("FirestoreCall", t.getMessage());
                                 }

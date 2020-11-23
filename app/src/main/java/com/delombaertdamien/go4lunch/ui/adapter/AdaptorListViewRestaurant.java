@@ -17,6 +17,8 @@ import com.delombaertdamien.go4lunch.ui.activity.DetailsActivity;
 import com.delombaertdamien.go4lunch.R;
 import com.delombaertdamien.go4lunch.models.POJO.Places.Result;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ public class AdaptorListViewRestaurant extends RecyclerView.Adapter<AdaptorListV
     private Map<String, Integer> map = new HashMap<>();
 
 
+    @NotNull
     @Override
     public RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
