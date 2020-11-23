@@ -8,4 +8,4 @@ This is the 7 project of developer Android OCR
 ![alt text](READ-ME/p6.png)
 ![alt text](READ-ME/p7.png)
 ![alt text](READ-ME/p8.png)
-![alt text](READ-ME/p9.png)
+![alt text](READ-ME/p9-1.png)
